@@ -22,7 +22,7 @@ ask() {  # 引数: 作業ディレクトリ, 質問文, 回答文から制限に
   pushd $1  # 作業ディレクトリに移動
   echo $1$'\n' > $out
   echo "$2" >> $out
-  echo "---"$'\n' >> $out
+  echo $'\n'$'\n'"---"$'\n'$'\n' >> $out
   local answer=$(claude --allowedTools=Write -p "$2")
   if "$3" && echo "$answer" | grep -q "You've hit your limit"; then
     # 制限中なら制限解除を待って再質問
