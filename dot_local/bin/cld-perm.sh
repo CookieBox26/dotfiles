@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+# <target dir>/.claude/settings.local.json を作成します (上書きも可)
 # Usage: cld-perm.sh <target dir> -s[12]<flag>
 # Ex. cld-perm.sh "`pwd`" -s1  # 何も許可しない設定ファイルを作成 (まだなければ)
 # Ex. cld-perm.sh "`pwd`" -s2  # 何も許可しない設定ファイルを作成 (あっても上書き)
