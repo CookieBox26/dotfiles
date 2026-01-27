@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<style type="text/css"><!--
+html, body {
+  margin: 0;
+  height: 100%;
+}
+body {
+  font-size: 15px;
+  line-height: 18px;
+  font-family: 'Ume Gothic', sans-serif;
+  color: #333;
+  background: #333;
+}
+.container {
+  box-sizing: border-box;
+  display: flex;
+}
+.area {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  padding: 8px;
+  overflow-y: scroll;
+}
+div#main {
+  width: 100%;
+  height: 100%;
+  gap: 2px;
+}
+div#left {
+  width: 200px;
+  height: 100%;
+  flex-flow: column;
+}
+div#right {
+  width: calc(100% - 202px);
+  height: 100%;
+  flex-flow: column;
+}
+hr {
+  box-sizing: border-box;
+  width: 100%;
+  border-top: 2px solid #333;
+  margin: 6px 0;
+}
+textarea#note {
+  background: #f0f0f0;
+  border: 0;
+  outline: 0;
+  resize: none;
+  display: block;
+  line-height: inherit;
+  font-size: 14px;
+  line-height: 17px;
+}
+a {
+  display: block;
+}
+a, a:visited {
+  color: #1f77b4;
+  text-decoration: none;
+}
+a:hover {
+  color: #1f77b4;
+  text-decoration: underline;
+}
+div.link {
+  color: #1f77b4;
+  cursor: pointer;
+}
+div.link:hover {
+  color: #1f77b4;
+  text-decoration: underline;
+}
+--></style>
+<script type="text/javascript"><!--
+const workspace = '../{{ .username }}/workspace/';
+function appendSidebar(elm) {
+  sidebar.appendChild(elm);
+}
+function createLocalLink(text, path) {
+  const link = document.createElement('a');
+  link.setAttribute('href', workspace + path);
+  link.innerHTML = text;
+  return link;
+}
+function createLink(text, url) {
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.innerHTML = text;
+  return link;
+}
+function createLinkWithClipboard(text, url, clipBoard) {
+  let link = document.createElement('div');
+  link.classList.add('link');
+  link.innerHTML = text;
+  link.addEventListener('click', function(event) {
+    navigator.clipboard.writeText(clipBoard);
+    window.open(url, '_blank');
+  });
+  return link;
+}
+function setupSidebar(sidebar) {
+  appendSidebar(createLinkWithClipboard('AWS Sign-in', 'https://signin.aws.amazon.com/signin?client_id=arn%3Aaws%3Asignin%3A%3A%3Aconsole%2Fcanvas&redirect_uri=https%3A%2F%2Fconsole.aws.amazon.com%2Fconsole%2Fhome%3Fca-oauth-flow-id%3D27fc%26hashArgs%3D%2523%26isauthcode%3Dtrue%26nc2%3Dh_si%26src%3Dheader-signin%26state%3DhashArgsFromTB_us-east-2_c002fd7d256faf4f&page=resolve&code_challenge=7uKnomvSJggsVq5BKuhKSetpaik-QQQyzL93evF-vUg&code_challenge_method=SHA-256&backwards_compatible=true', '{{ .email }}'));
+  appendSidebar(document.createElement('hr'));
+  appendSidebar(createLocalLink('Cookipedia α-version', 'cookipedia/docs/index.html'));
+  appendSidebar(createLocalLink('カラーパレット', 'cookipedia/docs/utils/color_palette.html'));
+  appendSidebar(createLocalLink('Cookie Box', 'cookie-box/site/index.html'));
+  appendSidebar(document.createElement('hr'));
+  appendSidebar(createLink('Slack', 'https://app.slack.com/client/{{ .slack }}'));
+  appendSidebar(createLink('Yahoo!メール', 'https://mail.yahoo.co.jp/u/pc/f/'));
+  appendSidebar(document.createElement('hr'));
+  appendSidebar(createLink('github.com', 'https://github.com/CookieBox26'));
+  appendSidebar(createLink('Create a new Gist', 'https://gist.github.com/'));
+  appendSidebar(document.createElement('hr'));
+  appendSidebar(createLink('Googleドライブ', 'https://drive.google.com/drive/my-drive'));
+  appendSidebar(createLink('はてなブログ', 'https://cookie-box.hatenablog.com/'));
+  appendSidebar(createLink('はてなブログ管理', 'https://blog.hatena.ne.jp/'));
+  appendSidebar(createLink('Qiita', 'https://qiita.com/CookieBox26'));
+  appendSidebar(createLink('ChatGPT', 'https://chatgpt.com/'));
+  appendSidebar(document.createElement('hr'));
+  appendSidebar(createLink('Prompt Templates', 'https://cookiebox26.github.io/ToyBox/misc/prompt-templates.html'));
+  appendSidebar(createLink('Copier Qiita', 'https://cookiebox26.github.io/ToyBox/misc/copier-qiita.html'));
+}
+function setupNote() {
+  const storageKey = 'note';
+  function saveNoteToLocalStorage() {
+    localStorage.setItem(storageKey, note.value);
+  }
+  const note = document.getElementById('note');
+  note.value = localStorage.getItem(storageKey) || 'ご自由にメモを取ってください。';
+  note.addEventListener('input', saveNoteToLocalStorage);
+  note.addEventListener('change', saveNoteToLocalStorage);
+}
+function setupLinks() {
+  const links = document.querySelectorAll('a');
+  links.forEach((link) => {
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener noreferrer');
+  });
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const sidebar = document.getElementById('sidebar');
+  setupSidebar(sidebar);
+  setupNote();
+  setupLinks();
+});
+// --></script>
+</head>
+<body>
+<div class="container" id="main">
+  <div class="container" id="left">
+    <div class="area" id="sidebar"></div>
+  </div>
+  <div class="container" id="right">
+    <textarea class="area" id="note" spellcheck="false"></textarea>
+  </div>
+</div>
+</body>
+</html>
