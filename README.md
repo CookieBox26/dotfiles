@@ -3,6 +3,9 @@
 # そのマシンへの初回の取得コマンドは以下
 # chezmoi init git@github.com:CookieBox26/dotfiles.git
 
+# ローカル注入変数がある場合は用意しておく
+# vi ~/.config/chezmoi/chezmoi.toml
+
 chezmoi git pull  # リポジトリの最新版をソースディレクトリにプル
 chezmoi diff  # ソースディレクトリとローカルの差分確認
 chezmoi apply -v  # ソースディレクトリからローカルへ反映
@@ -12,21 +15,36 @@ chezmoi apply -v  # ソースディレクトリからローカルへ反映
 ### ローカルからこのリポジトリへの反映方法
 ```sh
 chezmoi diff ~/.claude/CLAUDE.md  # ソースディレクトリとローカルの差分確認
+
 chezmoi add ~/.claude/CLAUDE.md  # ローカルの内容をソースディレクトリに登録
-chezmoi cd
+# chezmoi add --template ~/launcher.html  # テンプレートとして登録する場合
+# vi ~/.local/share/chezmoi/launcher.html.tmpl  # テンプレートをくり抜く
+
+# ソースディレクトリに移動
+# 公式には chezmoi cd だが Windows Git Bash で chezmoi cd すると bash でなくなるのでこう
+pushd ~/.local/share/chezmoi/
 git status
 git add dot_claude/CLAUDE.md  # ステージング
 git commit -m "Update CLAUDE.md to require showing diffs before changes"  # コミット
 git push  # プッシュ
-exit
+popd  # chezmoi cd で移動した場合は exit で元の場所に戻る
 ```
 
 ### 各スクリプトの使用例
 
-#### tools/bin/cld-ask.sh
+#### .local/bin/cld-perm.sh
+`<target dir>/.claude/settings.local.json` を作成または上書きします。  
+```sh
+# Usage: cld-perm.sh <target dir> -s[12]<flag>
+cld-perm.sh "`pwd`" -s1  # 何も許可しない設定ファイルを作成 (まだなければ)
+cld-perm.sh "`pwd`" -s2  # 何も許可しない設定ファイルを作成 (あっても上書き)
+cld-perm.sh "`pwd`" -s2Wb,Wr  # Web検索とファイル書き込みを許可 (上書き)
+cld-perm.sh "`pwd`" -s2Wb,Wr,Git  # Web検索とファイル書き込みと Git 操作を許可 (上書き)
+```
 
-Claude に質問し、回答を回収するスクリプトです。  
-PATH に `tools/bin/` を追加しておくとどこからでも使用できます。    
+#### .local/bin/cld-ask.sh
+
+Claude に質問して回答を回収します。 
 
 ````sh
 q="$(cat <<'EOF'
