@@ -30,7 +30,39 @@ git push  # プッシュ
 popd  # chezmoi cd で移動した場合は exit で元の場所に戻る
 ```
 
-### 各スクリプトの使用例
+### 各スクリプトの使用方法
+
+#### launcher.html
+ランチャーです。  
+これをブラウザのホームページに設定してブラウザのアカウント機能で他のマシンにもホームページ設定を連携する場合、ユーザ名が異なるマシンではファイルパスが変わってしまうので、ハードリンクを張ってください。  
+Chrome で新しいタブでもこれを開きたい場合は、拡張機能 [New Tab Redirect](https://chromewebstore.google.com/detail/new-tab-redirect/icpgjfneehieebagbmdbhnlpiopdcmna?hl=ja) で可能です。
+```sh
+# Ex. ホームページは file:///C:/Users/Cookie/launcher.html
+mkdir ../Cookie  # ユーザ名が Cookie でないマシンでも Cookie ディレクトリを作成
+cd ../Cookie
+ln ../${USERNAME}/launcher.html launcher.html
+```
+
+#### .local/lib/scheduled_task.py
+タスクをスケジュール実行します。
+```py
+import pathlib
+import sys
+sys.path.append(pathlib.Path('~/.local/lib').expanduser().as_posix())
+from scheduled_task import Task, TaskContainer
+
+class MyTask(Task):
+    task_name = 'テスト'
+    def task(self):
+        print('こんにちは')
+    def schedule(self):
+        # return self.scheduler.every().hour.at(':00')  # 毎時 0 分に実行
+        # return self.scheduler.every().day.at('09:15')  # 毎日 9:15 に実行
+        return self.scheduler.every().minutes.at(':00')
+
+if __name__ == '__main__':
+    TaskContainer([MyTask()], period=5).run()  # 5 秒ごとに判定
+```
 
 #### .local/bin/cld-perm.sh
 `<target dir>/.claude/settings.local.json` を作成または上書きします。  
@@ -43,9 +75,7 @@ cld-perm.sh "`pwd`" -s2Wb,Wr,Git  # Web検索とファイル書き込みと Git 
 ```
 
 #### .local/bin/cld-ask.sh
-
 Claude に質問して回答を回収します。 
-
 ````sh
 q="$(cat <<'EOF'
 ### 依頼内容
