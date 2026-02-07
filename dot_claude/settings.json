@@ -1,7 +1,11 @@
 {
   "permissions": {
     "deny": [
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(curl:*)",
+      "Bash(python:*)",
+      "Bash(pytest:*)",
+      "Bash(git:*)"
     ]
   },
   "hooks": {
@@ -11,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -Command \"(New-Object Media.SoundPlayer 'C:\\Windows\\media\\Alarm01.wav').PlaySync()\""
+            "command": "powershell.exe -Command \"(New-Object Media.SoundPlayer 'C:\\Windows\\Media\\Ring01.wav').PlaySync()\""
           }
         ]
       }

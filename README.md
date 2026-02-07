@@ -1,4 +1,11 @@
-### このリポジトリからローカルへの反映方法
+# dotfiles
+
+[Pull from repository](#pull-from-repository)  
+[Push to repository](#push-to-repository)  
+[Dotfiles overview](#dotfiles-overview)  
+[Dotfiles details](#dotfiles-details)  
+
+### Pull from repository
 ```sh
 # そのマシンへの初回の取得コマンドは以下
 # chezmoi init git@github.com:CookieBox26/dotfiles.git
@@ -12,7 +19,7 @@ chezmoi apply -v  # ソースディレクトリからローカルへ反映
 # ローカルに変更があって選択肢 diff/overwrite/all-overwrite/skip/quit が出たときは選択肢の頭文字を打つ
 ```
 
-### ローカルからこのリポジトリへの反映方法
+### Push to repository
 ```sh
 chezmoi diff ~/.claude/CLAUDE.md  # ソースディレクトリとローカルの差分確認
 
@@ -30,38 +37,61 @@ git push  # プッシュ
 popd  # chezmoi cd で移動した場合は exit で元の場所に戻る
 ```
 
-### 各スクリプトの使用方法
+### Dotfiles overview
+✅ このリポジトリに登録済  
+🔄 このリポジトリに未登録  
+💡 このリポジトリの設定で存在を前提とするファイル・ディレクトリ
+```sh
+~/
+├─ launcher.html ✅  # ランチャー
+│
+├─ .local/
+│    ├─ bin/
+│    │    ├─ cld-ask.sh ✅  # Claude にワンショットの質問をして回答を保存
+│    │    └─ cld-perm.sh ✅  # Claude のパーミッションを作成・変更
+│    ├─ lib/
+│    │    ├─ __init__.py ✅
+│    │    └─ scheduled_task.py ✅  # スケジュール実行タスク
+│    └─ share/chezmoi/  # chezmoi ソースディレクトリ
+│
+├─ .claude/
+│    ├─ settings.json ✅  # ユーザスコープのパーミッション
+│    ├─ CLAUDE.md ✅  # ユーザスコープのシステムプロンプト
+│    ├─ commands/
+│    │    ├─ ask.sh ✅  # 変更依頼にレベルを付与するラッパー
+│    │    └─ save.sh ✅  # 直前の質問と回答を保存
+│    └─ scripts/
+│          ├─ ask.sh ✅  # 変更依頼にレベルを付与するラッパー
+│          └─ post-proc.sh ✅  # 作業ディレクトリに post-proc.sh があれば繋ぐ
+│
+├─ workspace/  # 作業場所・Claude チャットセッション起動場所
+│    ├─ post-proc.sh 💡  # その時の作業内容に応じたよく走らせるコマンド
+│    ├─ drop.sh 🔄  # 資料作成場所の資料を DropBox に同期
+│    ├─ .claude/
+│    │    ├─ settings.local.json ✅
+│    │    ├─ CLAUDE.md 🔄
+│    │    ├─ rules/
+│    │    │    └─ hoge.md 🔄  # 個別プロジェクト用システムプロンプト (paths 指定)
+│    │    └─ ask.input.md 💡  # 変更依頼を書く
+│    ├─ backyard/ 💡  # 資料作成場所
+│    ├─ project_0/  # 個別プロジェクト
+│    └─ project_1/  # 個別プロジェクト
+│
+└─ Dropbox/obsidian/Mercury/
+     ├─ Claude/ ❗  # Claude 回答保存場所
+     └─ Backyard/ 💡  # 資料作成場所から同期
+```
+
+### Dotfiles details
 
 #### launcher.html
 ランチャーです。  
 これをブラウザのホームページに設定してブラウザのアカウント機能で他のマシンにもホームページ設定を連携する場合、ユーザ名が異なるマシンではファイルパスが変わってしまうので、ハードリンクを張ってください。  
-Chrome で新しいタブでもこれを開きたい場合は、拡張機能 [New Tab Redirect](https://chromewebstore.google.com/detail/new-tab-redirect/icpgjfneehieebagbmdbhnlpiopdcmna?hl=ja) で可能です。
 ```sh
 # Ex. ホームページは file:///C:/Users/Cookie/launcher.html
 mkdir ../Cookie  # ユーザ名が Cookie でないマシンでも Cookie ディレクトリを作成
 cd ../Cookie
 ln ../${USERNAME}/launcher.html launcher.html
-```
-
-#### .local/lib/scheduled_task.py
-タスクをスケジュール実行します。
-```py
-import pathlib
-import sys
-sys.path.append(pathlib.Path('~/.local/lib').expanduser().as_posix())
-from scheduled_task import Task, TaskContainer
-
-class MyTask(Task):
-    task_name = 'テスト'
-    def task(self):
-        print('こんにちは')
-    def schedule(self):
-        # return self.scheduler.every().hour.at(':00')  # 毎時 0 分に実行
-        # return self.scheduler.every().day.at('09:15')  # 毎日 9:15 に実行
-        return self.scheduler.every().minutes.at(':00')
-
-if __name__ == '__main__':
-    TaskContainer([MyTask()], period=5).run()  # 5 秒ごとに判定
 ```
 
 #### .local/bin/cld-perm.sh
@@ -121,3 +151,24 @@ EOF
 echo "$q"
 cld-ask.sh ~/workspace/nazuna/ "$q" "true"
 ````
+
+#### .local/lib/scheduled_task.py
+タスクをスケジュール実行します。
+```py
+import pathlib
+import sys
+sys.path.append(pathlib.Path('~/.local/lib').expanduser().as_posix())
+from scheduled_task import Task, TaskContainer
+
+class MyTask(Task):
+    task_name = 'テスト'
+    def task(self):
+        print('こんにちは')
+    def schedule(self):
+        # return self.scheduler.every().hour.at(':00')  # 毎時 0 分に実行
+        # return self.scheduler.every().day.at('09:15')  # 毎日 9:15 に実行
+        return self.scheduler.every().minutes.at(':00')
+
+if __name__ == '__main__':
+    TaskContainer([MyTask()], period=5).run()  # 5 秒ごとに判定
+```

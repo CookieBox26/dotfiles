@@ -3,7 +3,11 @@
 # これを何回分も予約しておくことができます
 # 回答は回収ボックス内に YYYYMMDD-hhmmss.md という名前で保存されます
 # フラグを指定した場合は回答内容から制限に達していたか確認し制限解除まで待って再質問します
+set -euo pipefail  # Fail fast on errors, undefined variables, and broken pipelines
+[ "$#" -eq 3 ] || { echo "Usage: $0 <target dir> <question> <check hit limit>" >&2; exit 1; }
+[ -e "$1" ] || { echo "Error: not found: $1" >&2; exit 2; }
 obsidian_dir=~/Dropbox/obsidian/Mercury/Claude/  # 回答マークダウンファイル回収場所
+
 
 wait_until_limit_reset() {  # 引数: 制限中メッセージ
   # 制限中メッセージをパースし解除まで待機 (スリープ) します
@@ -15,6 +19,7 @@ wait_until_limit_reset() {  # 引数: 制限中メッセージ
   echo "Rate limit hit. Waiting until $(date -d @$target +'%m/%d %H:%M')."
   sleep $((target - now))
 }
+
 
 ask() {  # 引数: 作業ディレクトリ, 質問文, 回答文から制限に達していたかを確認するか (true/false)
   # 作業ディレクトリに移動して Claude に質問し回答を回収場所に保存して戻ってきます
@@ -34,9 +39,7 @@ ask() {  # 引数: 作業ディレクトリ, 質問文, 回答文から制限に
   popd  # 元のディレクトリに帰還
 }
 
-set -euo pipefail  # Fail fast on errors, undefined variables, and broken pipelines
-[ "$#" -eq 3 ] || { echo "Usage: $0 <target dir> <question> <check hit limit>" >&2; exit 1; }
-[ -e "$1" ] || { echo "Error: not found: $1" >&2; exit 2; }
+
 ask "$1" "$2" "$3"
 exit
 

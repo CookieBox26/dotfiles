@@ -1,3 +1,7 @@
 #!/usr/bin/bash
-atp="C:\tools\aquestalkplayer\AquesTalkPlayer.exe /P まりさ /T "
-cmd.exe /c "${atp}ポスト処理のテストだぜ"
+script="$(pwd)/post-proc.sh"
+if [ -f "$script" ]; then
+  bash "$script"
+else
+  powershell.exe -Command "(New-Object Media.SoundPlayer 'C:\Windows\media\Ring06.wav').PlaySync()"
+fi
