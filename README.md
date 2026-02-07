@@ -74,6 +74,9 @@ popd  # chezmoi cd で移動した場合は exit で元の場所に戻る
 │    │    │    └─ hoge.md 🔄  # 個別プロジェクト用システムプロンプト (paths 指定)
 │    │    └─ ask.input.md 💡  # 変更依頼を書く
 │    ├─ backyard/ 💡  # 資料作成場所
+│    │    ├─ Manuscript/YYYYMMDD.suffix/
+│    │    ├─ Mtg/YYYYMMDD/
+│    │    └─ *.pdf
 │    ├─ project_0/  # 個別プロジェクト
 │    └─ project_1/  # 個別プロジェクト
 │
