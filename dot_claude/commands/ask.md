@@ -1,4 +1,4 @@
 ---
-allowed-tools: Bash(bash -c 'source ~/.claude_tools/ask.sh':*)
+allowed-tools: Bash(bash -c 'source ~/.claude/scripts/ask.sh':*)
 ---
-!`bash -c 'source ~/.claude_tools/ask.sh' _ $ARGUMENTS`
+!`bash -c 'source ~/.claude/scripts/ask.sh' _ $ARGUMENTS`

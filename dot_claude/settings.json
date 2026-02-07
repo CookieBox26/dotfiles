@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(rm:*)"
+    ]
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -Command \"(New-Object Media.SoundPlayer 'C:\\Windows\\media\\Alarm01.wav').PlaySync()\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'source ~/.claude/scripts/post-proc.sh'"
+          }
+        ]
+      }
+    ]
+  }
+}
