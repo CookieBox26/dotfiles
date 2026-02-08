@@ -12,6 +12,8 @@
 
 # ローカル注入変数がある場合は用意しておく
 # vi ~/.config/chezmoi/chezmoi.toml
+# [data]
+# username = "Cookie"
 
 chezmoi git pull  # リポジトリの最新版をソースディレクトリにプル
 chezmoi diff  # ソースディレクトリとローカルの差分確認
@@ -43,33 +45,35 @@ popd  # chezmoi cd で移動した場合は exit で元の場所に戻る
 💡 このリポジトリの設定で存在を前提とするファイル・ディレクトリ
 ```sh
 ~/
-├─ launcher.html ✅  # ランチャー
-│
+├─ .config/chezmoi/chezmoi.toml 🏠  # chezmoi 設定ファイル
 ├─ .local/
+│    ├─ share/chezmoi/ 🏠  # chezmoi ソースディレクトリ
+│    │
 │    ├─ bin/
 │    │    ├─ cld-ask.sh ✅  # Claude にワンショットの質問をして回答を保存
 │    │    └─ cld-perm.sh ✅  # Claude のパーミッションを作成・変更
-│    ├─ lib/
-│    │    ├─ __init__.py ✅
-│    │    └─ scheduled_task.py ✅  # スケジュール実行タスク
-│    └─ share/chezmoi/  # chezmoi ソースディレクトリ
+│    └─ lib/
+│         ├─ __init__.py ✅
+│         └─ scheduled_task.py ✅  # スケジュール実行タスク
+│
+├─ launcher.html ✅🧩  # ランチャー
 │
 ├─ .claude/
 │    ├─ settings.json ✅  # ユーザスコープのパーミッション
 │    ├─ CLAUDE.md ✅  # ユーザスコープのシステムプロンプト
 │    ├─ commands/
-│    │    ├─ ask.sh ✅  # 変更依頼にレベルを付与するラッパー
-│    │    └─ save.sh ✅  # 直前の質問と回答を保存
+│    │    ├─ ask.md ✅  # 変更依頼にレベルを付与するラッパー
+│    │    └─ save.md ✅🧩  # 直前の質問と回答を保存
 │    └─ scripts/
 │          ├─ ask.sh ✅  # 変更依頼にレベルを付与するラッパー
 │          └─ post-proc.sh ✅  # 作業ディレクトリに post-proc.sh があれば繋ぐ
 │
-├─ workspace/  # 作業場所・Claude チャットセッション起動場所
+├─ workspace/ 💡  # 作業場所・Claude チャットセッション起動場所
 │    ├─ post-proc.sh 💡  # その時の作業内容に応じたよく走らせるコマンド
 │    ├─ drop.sh 🔄  # 資料作成場所の資料を DropBox に同期
 │    ├─ .claude/
-│    │    ├─ settings.local.json ✅
-│    │    ├─ CLAUDE.md 🔄
+│    │    ├─ settings.local.json ✅🧩
+│    │    ├─ CLAUDE.md 🔄🔒
 │    │    ├─ rules/
 │    │    │    └─ hoge.md 🔄  # 個別プロジェクト用システムプロンプト (paths 指定)
 │    │    └─ ask.input.md 💡  # 変更依頼を書く
@@ -81,15 +85,15 @@ popd  # chezmoi cd で移動した場合は exit で元の場所に戻る
 │    └─ project_1/  # 個別プロジェクト
 │
 └─ Dropbox/obsidian/Mercury/
-     ├─ Claude/ ❗  # Claude 回答保存場所
-     └─ Backyard/ 💡  # 資料作成場所から同期
+     ├─ Claude/ 💡❗  # Claude 回答保存場所
+     ├─ Backyard/ 💡  # 資料作成場所から同期
+     └─ References/
 ```
 
 ### Dotfiles details
 
 #### launcher.html
-ランチャーです。  
-これをブラウザのホームページに設定してブラウザのアカウント機能で他のマシンにもホームページ設定を連携する場合、ユーザ名が異なるマシンではファイルパスが変わってしまうので、ハードリンクを張ってください。  
+ランチャーです。これをブラウザのホームページに設定してブラウザのアカウント機能で他のマシンにも連携する場合、ユーザ名が異なるマシンではファイルパスが変わってしまうので、適宜ハードリンクを張ってください。  
 ```sh
 # Ex. ホームページは file:///C:/Users/Cookie/launcher.html
 mkdir ../Cookie  # ユーザ名が Cookie でないマシンでも Cookie ディレクトリを作成
