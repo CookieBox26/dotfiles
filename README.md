@@ -10,6 +10,14 @@
 # そのマシンへの初回の取得コマンドは以下
 # chezmoi init git@github.com:CookieBox26/dotfiles.git
 
+# そのマシンでの初回のファイル暗号化用鍵ペア作成は以下
+# chezmoi age-keygen --output=~/.config/chezmoi/key_pc0.txt
+# vi ~/.config/chezmoi/chezmoi.toml
+# encryption = "age"
+# [age]
+# identity = "~/.config/chezmoi/key_pc0.txt"
+# recipient = "age1..."
+
 # ローカル注入変数がある場合は用意しておく
 # vi ~/.config/chezmoi/chezmoi.toml
 # [data]
@@ -26,8 +34,14 @@ chezmoi apply -v  # ソースディレクトリからローカルへ反映
 chezmoi diff ~/.claude/CLAUDE.md  # ソースディレクトリとローカルの差分確認
 
 chezmoi add ~/.claude/CLAUDE.md  # ローカルの内容をソースディレクトリに登録
-# chezmoi add --template ~/launcher.html  # テンプレートとして登録する場合
+
+# 暗号化して登録する場合 (GitHub リポジトリにファイルの内容を公開したくないとき)
+# chezmoi add --encrypt ~/himitsu.txt
+
+# テンプレートとして登録する場合 (ローカルでファイルに変数を代入したいとき)
+# chezmoi add --template ~/launcher.html  # テンプレートとして登録
 # vi ~/.local/share/chezmoi/launcher.html.tmpl  # テンプレートをくり抜く
+# vi ~/.config/chezmoi/chezmoi.toml  # 値を未設定の変数であれば値を設定
 
 # ソースディレクトリに移動
 # 公式には chezmoi cd だが Windows Git Bash で chezmoi cd すると bash でなくなるのでこう
@@ -71,9 +85,9 @@ popd  # chezmoi cd で移動した場合は exit で元の場所に戻る
 ├─ workspace/ 💡  # 作業場所・Claude チャットセッション起動場所
 │    ├─ post-proc.sh 💡  # その時の作業内容に応じたよく走らせるコマンド
 │    ├─ drop.sh 🔄  # 資料作成場所の資料を DropBox に同期
+│    ├─ CLAUDE.md 🔄🔒
 │    ├─ .claude/
 │    │    ├─ settings.local.json ✅🧩
-│    │    ├─ CLAUDE.md 🔄🔒
 │    │    ├─ rules/
 │    │    │    └─ hoge.md 🔄  # 個別プロジェクト用システムプロンプト (paths 指定)
 │    │    └─ ask.input.md 💡  # 変更依頼を書く
