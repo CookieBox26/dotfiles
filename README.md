@@ -11,12 +11,15 @@
 # chezmoi init git@github.com:CookieBox26/dotfiles.git
 
 # そのマシンでの初回のファイル暗号化用鍵ペア作成は以下
-# chezmoi age-keygen --output=~/.config/chezmoi/key_pc0.txt
+# chezmoi age-keygen --output=~/.config/chezmoi/key.txt
 # vi ~/.config/chezmoi/chezmoi.toml
 # encryption = "age"
 # [age]
-# identity = "~/.config/chezmoi/key_pc0.txt"
-# recipient = "age1..."
+# identity = "~/.config/chezmoi/key.txt"  # その PC の秘密鍵パス
+# recipients = [
+#   "age1...",  # PC1 公開鍵
+#   "age1...",  # PC2 公開鍵
+# ]
 
 # ローカル注入変数がある場合は用意しておく
 # vi ~/.config/chezmoi/chezmoi.toml
