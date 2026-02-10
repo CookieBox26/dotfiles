@@ -11,11 +11,21 @@
       "Bash(rm:*)",
       "Bash(curl:*)",
       "Bash(python:*)",
-      "Bash(pytest:*)",
       "Bash(git:*)"
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'source ~/.claude/scripts/pre-bash-hook.sh'"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "permission_prompt",

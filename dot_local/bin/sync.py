@@ -5,10 +5,26 @@ import argparse
 from pathlib import Path
 
 
+def remove_empty_dirs(dst: Path, dry_run: bool, keep_names=None):
+    keep_names = set(keep_names or [])
+    for root, dirs, _ in os.walk(dst, topdown=False):
+        root_p = Path(root)
+        for dname in dirs:
+            if dname in keep_names:
+                continue
+            d = root_p / dname
+            try:
+                if d.is_dir() and not any(d.iterdir()):
+                    print(f"[RMDIR] {d}")
+                    if not dry_run:
+                        d.rmdir()
+            except FileNotFoundError:
+                pass
+
+
 def sync_dirs(src, dst, delete=False, dry_run=False):
     src = Path(src)
     dst = Path(dst)
-
     for root, _, files in os.walk(src):
         rel = Path(root).relative_to(src)
         target_dir = dst / rel
@@ -27,16 +43,16 @@ def sync_dirs(src, dst, delete=False, dry_run=False):
                     shutil.copy2(s, d)
 
     if delete:
-        for root, _, files in os.walk(dst):
+        for root, _, files in os.walk(dst, topdown=False):
             rel = Path(root).relative_to(dst)
             src_dir = src / rel
-
             for f in files:
                 d = Path(root) / f
                 if not (src_dir / f).exists():
                     print(f"[DELETE] {d}")
                     if not dry_run:
                         d.unlink()
+        remove_empty_dirs(dst, dry_run=dry_run, keep_names={".git"})
 
 
 if __name__ == "__main__":

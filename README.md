@@ -56,9 +56,18 @@ git push  # プッシュ
 popd
 ```
 
+### Tips
+```sh
+# 個人設定ファイルを移動 or 削除したときローカル側の旧ファイルは自分の責任で削除してください
+# ソースディレクトリ側ではファイルのみ Git から削除しても空ディレクトリが残っていると
+# chezmoi はローカルにも同ディレクトリの存在を要求してしまいます
+# ソースディレクトリ以下の空ディレクトリを削除したいときの確認と削除コマンドは以下です
+find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -print
+find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -exec rmdir {} +
+```
+
 ### Dotfiles overview
 ✅ このリポジトリに登録済  
-🔄 このリポジトリに未登録  
 💡 このリポジトリの運用で存在を前提とするファイル・ディレクトリ
 ```sh
 ~/
@@ -83,16 +92,19 @@ popd
 │    │    └─ save.md ✅🧩  # 直前の質問と回答を保存するコマンド
 │    └─ scripts/
 │          ├─ ask.sh ✅  # 変更依頼にレベルを付与するコマンドの処理本体
+│          ├─ pre-bash-hook.sh ✅  # 意図しない Bash コマンドを禁止するためのツール使用前フック
 │          └─ post-proc.sh ✅  # 作業ディレクトリに post-proc.sh があれば回答後フック
 │
-├─ workspace/ 💡  # 日常作業ディレクトリ
-│    ├─ post-proc.sh 💡  # その時々の作業内容に応じたよく走らせるコマンド
-│    ├─ CLAUDE.md 🔄🔒  # 日常作業の上で Claude に伝えたい前提知識・ルール
+├─ workspace/ 💡🟣  # 日常作業ディレクトリ
+│    ├─ post-proc.sh ✅🔒  # その時々の作業内容に応じたよく走らせるコマンド
+│    ├─ CLAUDE.md ✅🔒  # 日常作業の上で Claude に伝えたい前提知識・ルール
 │    ├─ ask.md 💡  # メインエージェントへの作業依頼
 │    ├─ .claude/
 │    │    ├─ settings.local.json ✅🧩
-│    │    └─ agents/  # サブエージェント
-│    │
+│    │    ├─ agents/  # サブエージェント
+│    │    │     └─ zundamon.md ✅🧩
+│    │    └─ agent-memory/  # サブエージェントの記憶
+│    │          └─ zundamon/MEMORY.md
 │    ├─ backyard/ 💡  # 資料作成場所
 │    │    ├─ Manuscript/20260101suffix/
 │    │    ├─ Mtg/20260101/
@@ -103,10 +115,20 @@ popd
 │    │          └─ task_report.md  # サブエージェントの作業報告
 │    └─ project_1/  # 個別プロジェクト
 │
-└─ Dropbox/obsidian/Mercury/
+└─ Dropbox/obsidian/Mercury/  🟣
      ├─ Claude/ 💡❗  # Claude 回答保存場所
      ├─ Backyard/ 💡  # 資料作成場所と同期
      └─ References/
+
+
+# 暗号化ファイル 🔒 は変更したら再度暗号化します
+chezmoi add --encrypt ~/workspace/post-proc.sh
+chezmoi add --encrypt ~/workspace/CLAUDE.md
+# テンプレートファイル 🧩 はテンプレート側を編集したほうがよいです
+chezcd
+sakura workspace/dot_claude/settings.local.json.tmpl
+sakura workspace/dot_claude/agents/zundamon.md.tmpl
+# ローカル側を編集してしまったら改めてテンプレートとして登録しくり抜いてください
 ```
 
 ### Dotfiles details
@@ -121,12 +143,12 @@ ln ../${USERNAME}/launcher.html launcher.html
 ```
 
 #### .local/bin/sync.py
-ディレクトリ同期スクリプトです (rsync の代替策です)。
+ディレクトリ同期スクリプトです (rsync の代替策です)。`--delete` 指定時は同期先の空サブディレクトリも削除するので必要なサブディレクトリは空にしておかないでください。
 ```sh
 sync.py ~/workspace/backyard/ ~/Dropbox/obsidian/Mercury/Backyard/
-sync.py ~/workspace/backyard/ ~/Dropbox/obsidian/Mercury/Backyard/ --apply
+sync.py ~/workspace/backyard/ ~/Dropbox/obsidian/Mercury/Backyard/ --apply --delete
 sync.py ~/Dropbox/obsidian/Mercury/Backyard/ ~/workspace/backyard/
-sync.py ~/Dropbox/obsidian/Mercury/Backyard/ ~/workspace/backyard/ --apply
+sync.py ~/Dropbox/obsidian/Mercury/Backyard/ ~/workspace/backyard/ --apply --delete
 ```
 
 #### .local/bin/cld-perm.sh

@@ -5,6 +5,17 @@ if [ ! -f "$input_file" ] || [ ! -s "$input_file" ]; then
   printf '\n%s' "今は依頼はないです。"
   exit 0
 fi
+content="$(
+  awk '
+    /^###[[:space:]]+BACKLOG[[:space:]]*$/ { exit }
+    /^##[[:space:]]+BACKLOG[[:space:]]*$/  { exit }
+    { print }
+  ' "$input_file"
+)"
+if ! printf '%s' "$content" | grep -q '[^[:space:]]'; then
+  printf '\n%s' '今はまだ依頼はないです。'
+  exit 0
+fi
 
 # 引数がただ一つで 1, 2, 3 のどれかならチェックポイントを付加
 message=""
@@ -25,4 +36,4 @@ printf '\n'
 if [ -n "$message" ]; then
   printf '%s\n\n' "$message"
 fi
-cat "$input_file"
+printf '%s\n' "$content"
