@@ -4,3 +4,5 @@ export MSYS=winsymlinks:nativestrict  # Enable native symlink creation in Git Ba
 alias nppp='start "" "/c/Program Files/Notepad++/notepad++.exe"'
 alias sakura='start "" "/c/Program Files (x86)/sakura/sakura.exe"'
 alias chrome='start "" "/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $(pwd)'
+alias chezcd='pushd ~/.local/share/chezmoi'
+alias chezdiff='chezmoi diff | grep "^diff " | awk "{print \$3}"'

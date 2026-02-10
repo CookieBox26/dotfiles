@@ -46,20 +46,20 @@ chezmoi add ~/.claude/CLAUDE.md  # ローカルの内容をソースディレク
 # vi ~/.local/share/chezmoi/launcher.html.tmpl  # テンプレートをくり抜く
 # vi ~/.config/chezmoi/chezmoi.toml  # 値を未設定の変数であれば値を設定
 
-# ソースディレクトリに移動
-# 公式には chezmoi cd だが Windows Git Bash で chezmoi cd すると bash でなくなるのでこう
-pushd ~/.local/share/chezmoi/
+pushd ~/.local/share/chezmoi/  # ソースディレクトリに移動
+# chezmoi cd コマンドもあるが Windows Git Bash でそれをやると bash でなくなってしまう
+# このリポジトリから .bashrc 取得後であれば chezcd でエイリアスしている
 git status
 git add dot_claude/CLAUDE.md  # ステージング
 git commit -m "Update CLAUDE.md to require showing diffs before changes"  # コミット
 git push  # プッシュ
-popd  # chezmoi cd で移動した場合は exit で元の場所に戻る
+popd
 ```
 
 ### Dotfiles overview
 ✅ このリポジトリに登録済  
 🔄 このリポジトリに未登録  
-💡 このリポジトリの設定で存在を前提とするファイル・ディレクトリ
+💡 このリポジトリの運用で存在を前提とするファイル・ディレクトリ
 ```sh
 ~/
 ├─ .config/chezmoi/chezmoi.toml 🏠  # chezmoi 設定ファイル
@@ -67,14 +67,15 @@ popd  # chezmoi cd で移動した場合は exit で元の場所に戻る
 │    ├─ share/chezmoi/ 🏠  # chezmoi ソースディレクトリ
 │    │
 │    ├─ bin/
+│    │    ├─ sync.py ✅  # ディレクトリ同期スクリプト
 │    │    ├─ cld-ask.sh ✅  # Claude にワンショットの質問をして回答を保存
 │    │    └─ cld-perm.sh ✅  # Claude のパーミッションを作成・変更
 │    └─ lib/
 │         ├─ __init__.py ✅
 │         └─ scheduled_task.py ✅  # スケジュール実行タスク
 │
-├─ launcher.html ✅🧩  # ランチャー
-│
+├─ launcher.html ✅🧩
+├─ .bashrc ✅
 ├─ .claude/
 │    ├─ settings.json ✅  # ユーザスコープのパーミッション
 │    ├─ CLAUDE.md ✅  # ユーザスコープのシステムプロンプト
@@ -87,23 +88,24 @@ popd  # chezmoi cd で移動した場合は exit で元の場所に戻る
 │
 ├─ workspace/ 💡  # 作業場所・Claude チャットセッション起動場所
 │    ├─ post-proc.sh 💡  # その時の作業内容に応じたよく走らせるコマンド
-│    ├─ drop.sh 🔄  # 資料作成場所の資料を DropBox に同期
 │    ├─ CLAUDE.md 🔄🔒
 │    ├─ .claude/
 │    │    ├─ settings.local.json ✅🧩
-│    │    ├─ rules/
-│    │    │    └─ hoge.md 🔄  # 個別プロジェクト用システムプロンプト (paths 指定)
+│    │    ├─ agents/
 │    │    └─ ask.input.md 💡  # 変更依頼を書く
 │    ├─ backyard/ 💡  # 資料作成場所
-│    │    ├─ Manuscript/YYYYMMDD.suffix/
-│    │    ├─ Mtg/YYYYMMDD/
+│    │    ├─ Manuscript/20260101suffix/
+│    │    ├─ Mtg/20260101/
 │    │    └─ *.pdf
 │    ├─ project_0/  # 個別プロジェクト
+│    │    └─ mailbox/  # 郵便受け
+│    │          ├─ task_request.md  # 作業依頼
+│    │          └─ task_report.md  # 作業報告
 │    └─ project_1/  # 個別プロジェクト
 │
 └─ Dropbox/obsidian/Mercury/
      ├─ Claude/ 💡❗  # Claude 回答保存場所
-     ├─ Backyard/ 💡  # 資料作成場所から同期
+     ├─ Backyard/ 💡  # 資料作成場所と同期
      └─ References/
 ```
 
@@ -116,6 +118,15 @@ popd  # chezmoi cd で移動した場合は exit で元の場所に戻る
 mkdir ../Cookie  # ユーザ名が Cookie でないマシンでも Cookie ディレクトリを作成
 cd ../Cookie
 ln ../${USERNAME}/launcher.html launcher.html
+```
+
+#### .local/bin/sync.py
+ディレクトリ同期スクリプトです (rsync の代替策です)。
+```sh
+sync.py ~/workspace/backyard/ ~/Dropbox/obsidian/Mercury/Backyard/
+sync.py ~/workspace/backyard/ ~/Dropbox/obsidian/Mercury/Backyard/ --apply
+sync.py ~/Dropbox/obsidian/Mercury/Backyard/ ~/workspace/backyard/
+sync.py ~/Dropbox/obsidian/Mercury/Backyard/ ~/workspace/backyard/ --apply
 ```
 
 #### .local/bin/cld-perm.sh
