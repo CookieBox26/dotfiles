@@ -91,12 +91,12 @@ find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -exec rmdir 
 │    │    ├─ ask.md ✅  # 変更依頼にレベルを付与するコマンド
 │    │    └─ save.md ✅🧩  # 直前の質問と回答を保存するコマンド
 │    └─ scripts/
-│          ├─ ask.sh ✅  # 変更依頼にレベルを付与するコマンドの処理本体
-│          ├─ pre-bash-hook.sh ✅  # 意図しない Bash コマンドを禁止するためのツール使用前フック
-│          └─ post-proc.sh ✅  # 作業ディレクトリに post-proc.sh があれば回答後フック
+│         ├─ ask.sh ✅  # 変更依頼にレベルを付与するコマンドの処理本体
+│         ├─ pre-bash-hook.sh ✅  # 意図しない Bash コマンドを禁止するためのツール使用前フック
+│         └─ post-proc.sh ✅  # 回答後フック (作業ディレクトリに post-proc.sh があれば呼び出し)
 │
 ├─ workspace/ 💡🟣  # 日常作業ディレクトリ
-│    ├─ post-proc.sh ✅🔒  # その時々の作業内容に応じたよく走らせるコマンド
+│    ├─ post-proc.sh ✅🔒  # その時々の作業内容に応じた資料コンパイル・同期コマンド
 │    ├─ CLAUDE.md ✅🔒  # 日常作業の上で Claude に伝えたい前提知識・ルール
 │    ├─ ask.md 💡  # メインエージェントへの作業依頼
 │    ├─ .claude/
@@ -106,13 +106,11 @@ find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -exec rmdir 
 │    │    └─ agent-memory/  # サブエージェントの記憶
 │    │          └─ zundamon/MEMORY.md
 │    ├─ backyard/ 💡  # 資料作成場所
-│    │    ├─ Manuscript/20260101suffix/
+│    │    ├─ Draft/20260101suffix/
 │    │    ├─ Mtg/20260101/
 │    │    └─ *.pdf
 │    ├─ project_0/  # 個別プロジェクト
-│    │    └─ mailbox/  # このプロジェクトの郵便受け
-│    │          ├─ task_request.md  # サブエージェントへの作業依頼
-│    │          └─ task_report.md  # サブエージェントの作業報告
+│    │    └─ REPORT.md  # サブエージェントの作業報告
 │    └─ project_1/  # 個別プロジェクト
 │
 └─ Dropbox/obsidian/Mercury/  🟣
