@@ -27,15 +27,15 @@
 # username = "Cookie"
 
 chezmoi git pull  # リポジトリの最新版をソースディレクトリにプル
-chezmoi diff  # ソースディレクトリとローカルの差分確認
-chezmoi apply -v  # ソースディレクトリからローカルへ反映
+chezmoi diff  # ソースディレクトリとローカルの差分確認 (chezdiff で 1 行表示)
+chezmoi apply  # ソースディレクトリからローカルへ反映
+chezmoi apply ~/.bashrc  # ソースディレクトリからローカルへ反映 (特定ファイルのみ)
 # ローカルに変更があって選択肢 diff/overwrite/all-overwrite/skip/quit が出たときは選択肢の頭文字を打つ
 ```
 
 ### Push to repository
 ```sh
 chezmoi diff ~/.claude/CLAUDE.md  # ソースディレクトリとローカルの差分確認
-
 chezmoi add ~/.claude/CLAUDE.md  # ローカルの内容をソースディレクトリに登録
 
 # 暗号化して登録する場合 (GitHub リポジトリにファイルの内容を公開したくないとき)
@@ -46,7 +46,7 @@ chezmoi add ~/.claude/CLAUDE.md  # ローカルの内容をソースディレク
 # vi ~/.local/share/chezmoi/launcher.html.tmpl  # テンプレートをくり抜く
 # vi ~/.config/chezmoi/chezmoi.toml  # 値を未設定の変数であれば値を設定
 
-pushd ~/.local/share/chezmoi/  # ソースディレクトリに移動
+pushd ~/.local/share/chezmoi/  # ソースディレクトリに移動 (chezcd)
 # chezmoi cd コマンドもあるが Windows Git Bash でそれをやると bash でなくなってしまう
 # このリポジトリから .bashrc 取得後であれば chezcd でエイリアスしている
 git status
@@ -64,7 +64,7 @@ popd
 ~/
 ├─ .config/chezmoi/chezmoi.toml 🏠  # chezmoi 設定ファイル
 ├─ .local/
-│    ├─ share/chezmoi/ 🏠  # chezmoi ソースディレクトリ
+│    ├─ share/chezmoi/ 🏠  # chezmoi ソースディレクトリ (chezcd でここに pushd)
 │    │
 │    ├─ bin/
 │    │    ├─ sync.py ✅  # ディレクトリ同期スクリプト
@@ -73,34 +73,34 @@ popd
 │    └─ lib/
 │         ├─ __init__.py ✅
 │         └─ scheduled_task.py ✅  # スケジュール実行タスク
-│
 ├─ launcher.html ✅🧩
 ├─ .bashrc ✅
 ├─ .claude/
 │    ├─ settings.json ✅  # ユーザスコープのパーミッション
 │    ├─ CLAUDE.md ✅  # ユーザスコープのシステムプロンプト
 │    ├─ commands/
-│    │    ├─ ask.md ✅  # 変更依頼にレベルを付与するラッパー
-│    │    └─ save.md ✅🧩  # 直前の質問と回答を保存
+│    │    ├─ ask.md ✅  # 変更依頼にレベルを付与するコマンド
+│    │    └─ save.md ✅🧩  # 直前の質問と回答を保存するコマンド
 │    └─ scripts/
-│          ├─ ask.sh ✅  # 変更依頼にレベルを付与するラッパー
-│          └─ post-proc.sh ✅  # 作業ディレクトリに post-proc.sh があれば繋ぐ
+│          ├─ ask.sh ✅  # 変更依頼にレベルを付与するコマンドの処理本体
+│          └─ post-proc.sh ✅  # 作業ディレクトリに post-proc.sh があれば回答後フック
 │
-├─ workspace/ 💡  # 作業場所・Claude チャットセッション起動場所
-│    ├─ post-proc.sh 💡  # その時の作業内容に応じたよく走らせるコマンド
-│    ├─ CLAUDE.md 🔄🔒
+├─ workspace/ 💡  # 日常作業ディレクトリ
+│    ├─ post-proc.sh 💡  # その時々の作業内容に応じたよく走らせるコマンド
+│    ├─ CLAUDE.md 🔄🔒  # 日常作業の上で Claude に伝えたい前提知識・ルール
+│    ├─ ask.md 💡  # メインエージェントへの作業依頼
 │    ├─ .claude/
 │    │    ├─ settings.local.json ✅🧩
-│    │    ├─ agents/
-│    │    └─ ask.input.md 💡  # 変更依頼を書く
+│    │    └─ agents/  # サブエージェント
+│    │
 │    ├─ backyard/ 💡  # 資料作成場所
 │    │    ├─ Manuscript/20260101suffix/
 │    │    ├─ Mtg/20260101/
 │    │    └─ *.pdf
 │    ├─ project_0/  # 個別プロジェクト
-│    │    └─ mailbox/  # 郵便受け
-│    │          ├─ task_request.md  # 作業依頼
-│    │          └─ task_report.md  # 作業報告
+│    │    └─ mailbox/  # このプロジェクトの郵便受け
+│    │          ├─ task_request.md  # サブエージェントへの作業依頼
+│    │          └─ task_report.md  # サブエージェントの作業報告
 │    └─ project_1/  # 個別プロジェクト
 │
 └─ Dropbox/obsidian/Mercury/
