@@ -27,7 +27,7 @@
 # username = "Cookie"
 
 chezmoi git pull  # リポジトリの最新版をソースディレクトリにプル
-chezmoi diff  # ソースディレクトリとローカルの差分確認 (chezdiff で 1 行表示)
+chezmoi diff  # ソースディレクトリとローカルの差分確認 (.bashrc 取得後であれば chezdiff で 1 行表示)
 chezmoi apply  # ソースディレクトリからローカルへ反映
 chezmoi apply ~/.bashrc  # ソースディレクトリからローカルへ反映 (特定ファイルのみ)
 # ローカルに変更があって選択肢 diff/overwrite/all-overwrite/skip/quit が出たときは選択肢の頭文字を打つ
@@ -48,7 +48,7 @@ chezmoi add ~/.claude/CLAUDE.md  # ローカルの内容をソースディレク
 
 pushd ~/.local/share/chezmoi/  # ソースディレクトリに移動 (chezcd)
 # chezmoi cd コマンドもあるが Windows Git Bash でそれをやると bash でなくなってしまう
-# このリポジトリから .bashrc 取得後であれば chezcd でエイリアスしている
+# .bashrc 取得後であれば chezcd でエイリアスしている
 git status
 git add dot_claude/CLAUDE.md  # ステージング
 git commit -m "Update CLAUDE.md to require showing diffs before changes"  # コミット
@@ -56,7 +56,7 @@ git push  # プッシュ
 popd
 ```
 
-### Tips
+#### Tips
 ```sh
 # 個人設定ファイルを移動 or 削除したときローカル側の旧ファイルは自分の責任で削除してください
 # ソースディレクトリ側ではファイルのみ Git から削除しても空ディレクトリが残っていると
@@ -76,7 +76,8 @@ find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -exec rmdir 
 │    ├─ share/chezmoi/ 🏠  # chezmoi ソースディレクトリ (chezcd でここに pushd)
 │    │
 │    ├─ bin/
-│    │    ├─ sync.py ✅  # ディレクトリ同期スクリプト
+│    │    ├─ sync.py ✅  # ディレクトリ同期
+│    │    ├─ sound.sh ✅  # アラームやボイス
 │    │    ├─ cld-ask.sh ✅  # Claude にワンショットの質問をして回答を保存
 │    │    └─ cld-perm.sh ✅  # Claude のパーミッションを作成・変更
 │    └─ lib/
@@ -117,8 +118,9 @@ find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -exec rmdir 
      ├─ Claude/ 💡❗  # Claude 回答保存場所
      ├─ Backyard/ 💡  # 資料作成場所と同期
      └─ References/
-
-
+```
+#### Note
+```sh
 # 暗号化ファイル 🔒 は変更したら再度暗号化します
 chezmoi add --encrypt ~/workspace/post-proc.sh
 chezmoi add --encrypt ~/workspace/CLAUDE.md
@@ -141,12 +143,25 @@ ln ../${USERNAME}/launcher.html launcher.html
 ```
 
 #### .local/bin/sync.py
-ディレクトリ同期スクリプトです (rsync の代替策です)。`--delete` 指定時は同期先の空サブディレクトリも削除するので必要なサブディレクトリは空にしておかないでください。
+ディレクトリ同期スクリプトです。`--delete` 指定時は同期先の空サブディレクトリも削除するので必要なサブディレクトリは空にしておかないでください。
 ```sh
 sync.py ~/workspace/backyard/ ~/Dropbox/obsidian/Mercury/Backyard/
 sync.py ~/workspace/backyard/ ~/Dropbox/obsidian/Mercury/Backyard/ --apply --delete
 sync.py ~/Dropbox/obsidian/Mercury/Backyard/ ~/workspace/backyard/
 sync.py ~/Dropbox/obsidian/Mercury/Backyard/ ~/workspace/backyard/ --apply --delete
+```
+
+#### .local/bin/sound.sh
+音を出すスクリプトです。
+```sh
+# media 指定時は ls C:/Windows/Media にある .wav を鳴らします
+sound.sh media Alarm01
+sound.sh media Alarm02
+sound.sh media Ring06
+
+# marisa 指定時はテキスト読み上げします (C:\tools\aquestalkplayer\AquesTalkPlayer.exe が必要です)
+sound.sh marisa グーグルドライブにアップロードしたぜ
+# スピーカによって先頭が聞きづらいときは AquesTalkPalyer.exe の環境設定で先頭無音 800ms などを入れてください
 ```
 
 #### .local/bin/cld-perm.sh
