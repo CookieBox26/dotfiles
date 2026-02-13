@@ -36,11 +36,15 @@ body="$(jq -rs '
     (.value.message.content | type) == "string"
   )] | last | .key as $idx |
 
-  # user_message を取得して assistant 側の応答を収集
-  $all[$idx].message.content as $user |
+  # /ask コマンドの場合、次の行の content[0].text をユーザ入力として取得
+  (if ($all[$idx].message.content | test("<command-name>/ask</command-name>"))
+   then { user: $all[$idx + 1].message.content[0].text, start: ($idx + 2) }
+   else { user: $all[$idx].message.content, start: ($idx + 1) }
+   end) as $r |
+  $r.user as $user |
 
   # それ以降の assistant 行から thinking / text を抽出（空白のみはスキップ）
-  [$all[$idx + 1:][] | select(.message.role == "assistant")] |
+  [$all[$r.start:][] | select(.message.role == "assistant")] |
   [.[] | .message.content[] | select(.type == "thinking") | .thinking | select(test("^\\s*$") | not)] as $thinkings |
   [.[] | .message.content[] | select(.type == "text") | .text | select(test("^\\s*$") | not)] as $texts |
 
