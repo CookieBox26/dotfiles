@@ -1,4 +1,5 @@
 {
+  "defaultMode": "dontAsk",
   "permissions": {
     "allow": [
       "WebSearch",
