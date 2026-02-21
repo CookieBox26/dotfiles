@@ -1,22 +1,31 @@
 ﻿# VUI.ps1
 # Windows標準の音声認識を使った音声コマンドランチャー
-# 使い方: powershell -ExecutionPolicy Bypass -File VUI.ps1
+# 使い方: powershell -ExecutionPolicy Bypass -File VCL.ps1
 param(
-    [double]$Confidence = 0.5  # 信頼度の閾値 (0.0-1.0)
+    [double]$Confidence = 0.5,  # 信頼度の閾値 (0.0-1.0)
+    [string]$JsonPath = ".vcl.json"  # カスタムコマンド定義
 )
 Add-Type -AssemblyName System.Speech
 
 # ============================================================
-# コマンド定義 (ここをカスタマイズ)
-# "起動フレーズ" = "実行コマンド"
+# コマンド定義 ("起動フレーズ" = "実行コマンド")
 # ============================================================
 $commands = [ordered]@{
-    "ビルドして"       = "bash build.sh"
-    "アップロードして" = "bash upload.sh"
-    "ステータス"       = "git status"
-    "こんにちは"       = "echo 'こんにちは'"
-    "止めて"           = "__EXIT__"
+    "こんにちは"   = "echo 'こんにちは'"
 }
+if ($JsonPath -and (Test-Path $JsonPath)) {
+    try {
+        $json = Get-Content $JsonPath -Raw | ConvertFrom-Json
+        foreach ($p in $json.PSObject.Properties) {
+            $commands[$p.Name] = $p.Value
+        }
+    }
+    catch {
+        # JSON を読み込めない場合は無視
+    }
+}
+$exitPhrase = "終わり"
+$commands[$exitPhrase] = "__EXIT__"
 
 # ============================================================
 # 認識エンジン初期化
@@ -56,7 +65,7 @@ foreach ($key in $commands.Keys) {
     }
 }
 Write-Host ""
-$waitMsg = "音声を待機中... (Ctrl+C または '止めて' で音声認識終了)"
+$waitMsg = "音声を待機中... (Ctrl+C または '$exitPhrase' で音声認識終了)"
 Write-Host $waitMsg -ForegroundColor Green
 Write-Host ""
 try {
