@@ -2,6 +2,7 @@
   "defaultMode": "dontAsk",
   "permissions": {
     "allow": [
+      "Skill(ask)",
       "WebSearch",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:dl.acm.org)",
