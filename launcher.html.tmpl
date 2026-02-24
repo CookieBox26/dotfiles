@@ -146,10 +146,13 @@ function setupSidebar(sidebar) {
   appendSidebar(createLink(' - dotfiles', 'https://github.com/CookieBox26/dotfiles/blob/main/README.md'));
   appendSidebar(createLink(' - backyard', 'https://github.com/CookieBox26/backyard/blob/main/README.md'));
   appendSidebar(createLink(' - nazuna', 'https://github.com/CookieBox26/nazuna/blob/main/README.md'));
+  appendSidebar(createLink(' - zuma', 'https://github.com/CookieBox26/zumas/blob/main/README.md'));
   appendSidebar(createLink('Create a new Gist', 'https://gist.github.com/'));
   appendSidebar(document.createElement('hr'));
-  appendSidebar(createHomeLink('chezmoi', '.local/share/chezmoi/README.md'));
-  appendSidebar(createWorkspaceLink('nazuna', 'nazuna/README.md'));
+  appendSidebar(createHomeLink('chezmoi/README', '.local/share/chezmoi/README.md'));
+  appendSidebar(createWorkspaceLink('workspace/CLAUDE', 'CLAUDE.md'));
+  appendSidebar(createWorkspaceLink('nazuna/README', 'nazuna/README.md'));
+  appendSidebar(createHomeLink('zuma/README', 'zuma/README.md'));
   appendSidebar(createWorkspaceLink('Cookipedia α-version', 'cookipedia/docs/index.html'));
   appendSidebar(createWorkspaceLink('カラーパレット', 'cookipedia/docs/utils/color_palette.html'));
   appendSidebar(createWorkspaceLink('Cookie Box', 'cookie-box/site/index.html'));

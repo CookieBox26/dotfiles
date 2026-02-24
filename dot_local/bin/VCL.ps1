@@ -11,7 +11,9 @@ Add-Type -AssemblyName System.Speech
 # コマンド定義 ("起動フレーズ" = "実行コマンド")
 # ============================================================
 $commands = [ordered]@{
-    "こんにちは"   = "echo 'こんにちは'"
+    "こんにちは" = "echo 'こんにちは'"
+    "依頼を書く" = "[EXE]C:\Program Files (x86)\sakura\sakura.exe[ARG]ask.md"
+    "参考文献" = "bash -c 'source ~/.local/bin/obsi.sh'"
 }
 if ($JsonPath -and (Test-Path $JsonPath)) {
     try {
@@ -94,7 +96,15 @@ try {
         }
         Write-Host "[$timestamp] 実行: $cmd" -ForegroundColor Cyan
         try {
-            Invoke-Expression $cmd
+            if ($cmd.StartsWith('[EXE]')) {
+                $body = $cmd.Substring(5)
+                $parts = $body -split '\[ARG\]', 2
+                $exe = $parts[0]
+                $arg = if ($parts.Count -gt 1) { $parts[1] } else { $null }
+                if ($arg) { & $exe $arg } else { & $exe }
+            } else {
+                Invoke-Expression $cmd
+            }
         } catch {
             Write-Host "[$timestamp] コマンドエラー: $_" -ForegroundColor Red
         }

@@ -9,7 +9,7 @@
       "Bash(pytest:*)"
     ],
     "additionalDirectories": [
-      "C:/Users/{{ .username }}/Dropbox/obsidian/Mercury/References/"
+      "../Dropbox/obsidian/Mercury/References/"
     ]
   }
 }
