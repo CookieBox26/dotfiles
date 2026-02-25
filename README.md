@@ -1,5 +1,7 @@
 # dotfiles
 
+個人設定ファイル管理リポジトリ ([chezmoi](https://www.chezmoi.io/) 前提)
+
 [Pull from repository](#pull-from-repository)  
 [Push to repository](#push-to-repository)  
 [Dotfiles overview](#dotfiles-overview)  
@@ -27,25 +29,31 @@
 # username = "Cookie"
 
 chezmoi git pull  # リポジトリの最新版をソースディレクトリにプル
-chezmoi diff  # ソースディレクトリとローカルの差分確認 (.bashrc 取得後であれば chezdiff で 1 行表示)
-chezmoi apply  # ソースディレクトリからローカルへ反映
-chezmoi apply ~/.bashrc  # ソースディレクトリからローカルへ反映 (特定ファイルのみ)
+
+# ===== 差分を確認しながらソースをローカルに適用 =====
+# 以下の操作はソースディレクトリに移動 (エイリアス chezcd) した上で bash helper.sh で対話的に可能
+chezmoi diff  # ソースとローカルの差分確認 (.bashrc 取得後であればエイリアス chezdiff で 1 行表示可能)
+chezmoi apply  # ソースをローカルに適用
+chezmoi apply ~/.bashrc  # ソースをローカルに適用 (特定ファイルのみ)
 # ローカルに変更があって選択肢 diff/overwrite/all-overwrite/skip/quit が出たときは選択肢の頭文字を打つ
 ```
 
 ### Push to repository
 ```sh
-chezmoi diff ~/.claude/CLAUDE.md  # ソースディレクトリとローカルの差分確認
-chezmoi add ~/.claude/CLAUDE.md  # ローカルの内容をソースディレクトリに登録
-
+# ===== ローカルをソースに登録 (そのファイルの初回の登録) =====
+chezmoi add ~/.claude/CLAUDE.md
 # 暗号化して登録する場合 (GitHub リポジトリにファイルの内容を公開したくないとき)
 # chezmoi add --encrypt ~/himitsu.txt
-
 # テンプレートとして登録する場合 (ローカルでファイルに変数を代入したいとき)
 # chezmoi add --template ~/launcher.html  # テンプレートとして登録
 # vi ~/.local/share/chezmoi/launcher.html.tmpl  # テンプレートをくり抜く
 # vi ~/.config/chezmoi/chezmoi.toml  # 値を未設定の変数であれば値を設定
 
+# ===== ローカルをソースに登録 (そのファイルの 2 回目以降の登録) =====
+# 差分を確認しながら適宜ローカルから再登録する (テンプレート化ファイルはソース側編集推奨)
+# ソースディレクトリに移動 (エイリアス chezcd) した上で bash helper.sh で対話的に登録可能
+
+# ===== Git にステージング・コミット・プッシュ =====
 pushd ~/.local/share/chezmoi/  # ソースディレクトリに移動 (chezcd)
 # chezmoi cd コマンドもあるが Windows Git Bash でそれをやると bash でなくなってしまう
 # .bashrc 取得後であれば chezcd でエイリアスしている
@@ -74,16 +82,19 @@ find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -exec rmdir 
 ├─ .config/chezmoi/chezmoi.toml 🏠  # chezmoi 設定ファイル
 ├─ .local/
 │    ├─ share/chezmoi/ 🏠  # chezmoi ソースディレクトリ (chezcd でここに pushd)
+│    │    └─ helper.sh 🏠  # ローカルとソースの差分を対話的に解消するシェルスクリプト
 │    │
 │    ├─ bin/
-│    │    ├─ sync.py ✅  # ディレクトリ同期
-│    │    ├─ sound.sh ✅  # アラームやボイス
 │    │    ├─ cld-ask.sh ✅  # Claude にワンショットの質問をして回答を保存
-│    │    └─ cld-perm.sh ✅  # Claude のパーミッションを作成・変更
+│    │    ├─ cld-perm.sh ✅  # Claude のパーミッションを作成・変更
+│    │    ├─ obsi.sh ✅  # Obsidian ランチャー
+│    │    ├─ sound.sh ✅  # アラームやボイス
+│    │    ├─ sync.py ✅  # ディレクトリ同期
+│    │    └─ VCL.ps1 ✅  # ボイスコマンドランチャー
 │    └─ lib/
 │         ├─ __init__.py ✅
 │         └─ scheduled_task.py ✅  # スケジュール実行タスク
-├─ launcher.html ✅🧩
+├─ launcher.html ✅🧩  # ランチャー
 ├─ .bashrc ✅
 ├─ .claude/
 │    ├─ settings.json ✅  # ユーザスコープのパーミッション
@@ -101,32 +112,31 @@ find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -exec rmdir 
 │    ├─ CLAUDE.md ✅🔒  # 日常作業の上で Claude に伝えたい前提知識・ルール
 │    ├─ ask.md 💡  # メインエージェントへの作業依頼
 │    ├─ .claude/
-│    │    ├─ settings.local.json ✅🧩
+│    │    ├─ settings.local.json ✅
 │    │    ├─ agents/  # サブエージェント
 │    │    │     └─ zundamon.md ✅🧩
 │    │    └─ agent-memory/  # サブエージェントの記憶
 │    │          └─ zundamon/MEMORY.md
-│    ├─ backyard/ 💡  # 資料作成場所
+│    ├─ backyard/ 🐈‍⬛  # 報告資料倉庫
 │    │    ├─ Draft/20260101suffix/
-│    │    ├─ Mtg/20260101/
+│    │    ├─ Mtg/20260101/  # 打合せ資料
 │    │    └─ *.pdf
 │    ├─ project_0/  # 個別プロジェクト
-│    │    └─ REPORT.md  # サブエージェントの作業報告
+│    │    └─ _report.md  # サブエージェントの作業報告
 │    └─ project_1/  # 個別プロジェクト
 │
 └─ Dropbox/obsidian/Mercury/  🟣
-     ├─ Claude/ 💡❗  # Claude 回答保存場所
-     ├─ Backyard/ 💡  # 資料作成場所と同期
-     └─ References/
+     ├─ Claude/ 💡  # Claude 回答保存場所
+     └─ References/ 💡  # 参考文献置き場
 ```
 #### Note
 ```sh
 # 暗号化ファイル 🔒 は変更したら再度暗号化します
-chezmoi add --encrypt ~/workspace/post-proc.sh
 chezmoi add --encrypt ~/workspace/CLAUDE.md
-# テンプレートファイル 🧩 はテンプレート側を編集したほうがよいです
+chezmoi add --encrypt ~/workspace/post-proc.sh
+# テンプレートファイル 🧩 はテンプレート側を編集してください
 chezcd
-sakura workspace/dot_claude/settings.local.json.tmpl
+sakura launcher.html.tmpl
 sakura workspace/dot_claude/agents/zundamon.md.tmpl
 # ローカル側を編集してしまったら改めてテンプレートとして登録しくり抜いてください
 ```

@@ -13,7 +13,7 @@ Add-Type -AssemblyName System.Speech
 $commands = [ordered]@{
     "こんにちは" = "echo 'こんにちは'"
     "依頼を書く" = "[EXE]C:\Program Files (x86)\sakura\sakura.exe[ARG]ask.md"
-    "参考文献" = "bash -c 'source ~/.local/bin/obsi.sh'"
+    "参考文献" = "bash -c 'source ~/.local/bin/obsi.sh ""`$@""' _ Mercury References%2Fask"
 }
 if ($JsonPath -and (Test-Path $JsonPath)) {
     try {
