@@ -3,6 +3,7 @@
   "permissions": {
     "allow": [
       "Skill(ask)",
+      "Bash(bash -c :*)",
       "WebSearch",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:dl.acm.org)",

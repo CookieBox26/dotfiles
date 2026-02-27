@@ -26,7 +26,7 @@ if ($JsonPath -and (Test-Path $JsonPath)) {
         # JSON を読み込めない場合は無視
     }
 }
-$exitPhrase = "終わり"
+$exitPhrase = "音声認識を終了"
 $commands[$exitPhrase] = "__EXIT__"
 
 # ============================================================
