@@ -1,12 +1,13 @@
 #!/usr/bin/bash
 set -euo pipefail
-
 json=$(cat)
 command=$(printf '%s' "$json" | jq -r '.tool_input.command // ""')
+
 if echo "$command" | grep -qP '^pytest$'; then
   exit 0
-fi
-if [[ "$command" =~ ^bash\ -c\ \'source\ ~/.claude/scripts/ask\.sh\' ]]; then
+elif [[ "$command" =~ ^bash\ -c\ \'source\ ~/.claude/scripts/ask\.sh\' ]]; then
+  exit 0
+elif [[ "$command" =~ ^bash\ -c\ \'source\ ~/.claude/scripts/post-proc\.sh\'$ ]]; then
   exit 0
 fi
 
