@@ -95,6 +95,7 @@ find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -exec rmdir 
 │         ├─ __init__.py ✅
 │         └─ scheduled_task.py ✅  # スケジュール実行タスク
 ├─ launcher.html ✅🧩  # ランチャー
+├─ .aws/config ✅
 ├─ .bashrc ✅
 ├─ .claude/
 │    ├─ settings.json ✅  # ユーザスコープの Claude へのパーミッション
