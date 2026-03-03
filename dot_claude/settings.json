@@ -6,6 +6,7 @@
       "Bash(bash -c :*)",
       "WebSearch",
       "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:dl.acm.org)",
       "WebFetch(domain:arxiv.org)",
       "WebFetch(domain:ar5iv.labs.arxiv.org)"

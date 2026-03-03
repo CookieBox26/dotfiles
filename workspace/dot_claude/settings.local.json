@@ -1,12 +1,12 @@
 {
   "permissions": {
-    "deny": [
-      "Read(./ask.md)"
-    ],
     "allow": [
       "Write(./**)",
       "Edit(./**)",
-      "Bash(cd :*)"
+      "Bash(pytest:*)"
+    ],
+    "deny": [
+      "Read(./ask.md)"
     ],
     "additionalDirectories": [
       "../Dropbox/obsidian/Mercury/References/"
