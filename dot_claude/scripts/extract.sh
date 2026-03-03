@@ -1,4 +1,7 @@
 #!/usr/bin/bash
+# Claude との最後の会話をパースしてファイルに書き込むスクリプトです
+# このスクリプトを使用するにはプロジェクト下の post-proc.sh に以下を記述してください
+# source ~/.claude/scripts/extract.sh
 set -euo pipefail
 
 # 引数からモードを取る (デフォルト 1 = 常に会話を抽出・保存)

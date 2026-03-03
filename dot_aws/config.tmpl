@@ -1,0 +1,15 @@
+[sso-session cookiebox]
+sso_start_url = {{ .aws_sso_start_url }}
+sso_region = {{ .aws_sso_region }}
+
+[profile GetPrice]
+sso_session = cookiebox
+sso_account_id = {{ .aws_account_id_cookiebox }}
+sso_role_name = GetPrice
+region = ap-northeast-1
+output = json
+
+[profile EC2StartStop]
+sso_session = cookiebox
+sso_account_id = {{ .aws_account_id_cookiebox }}
+sso_role_name = EC2StartStop

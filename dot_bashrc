@@ -1,9 +1,13 @@
 export PATH=$PATH:~/.local/bin/
 export LANG=ja_JP.UTF-8  # Set locale to Japanese (UTF-8)
 export MSYS=winsymlinks:nativestrict  # Enable native symlink creation in Git Bash (MSYS)
+
 alias nppp='start "" "/c/Program Files/Notepad++/notepad++.exe"'
 alias sakura='start "" "/c/Program Files (x86)/sakura/sakura.exe"'
 alias chrome='start "" "/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" $(pwd)'
+
 alias chezcd='pushd ~/.local/share/chezmoi'
 alias chezdiff='chezmoi diff | grep "^diff " | awk "{print \$3}"'
+alias chezconf='sakura ~/.config/chezmoi/chezmoi.toml'
+
 alias vcl='powershell -ExecutionPolicy Bypass -File "$(cygpath -w ~/.local/bin/VCL.ps1)"'

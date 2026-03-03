@@ -47,7 +47,7 @@ chezmoi add ~/.claude/CLAUDE.md
 # テンプレートとして登録する場合 (ローカルでファイルに変数を代入したいとき)
 # chezmoi add --template ~/launcher.html  # テンプレートとして登録
 # vi ~/.local/share/chezmoi/launcher.html.tmpl  # テンプレートをくり抜く
-# vi ~/.config/chezmoi/chezmoi.toml  # 値を未設定の変数であれば値を設定
+# vi ~/.config/chezmoi/chezmoi.toml  # 値を未設定の変数であれば値を設定 (エイリアス chezconf)
 
 # ===== ローカルをソースに登録 (そのファイルの 2 回目以降の登録) =====
 # 差分を確認しながら適宜ローカルから再登録する (テンプレート化ファイルはソース側編集推奨)
@@ -97,35 +97,39 @@ find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -exec rmdir 
 ├─ launcher.html ✅🧩  # ランチャー
 ├─ .bashrc ✅
 ├─ .claude/
-│    ├─ settings.json ✅  # ユーザスコープのパーミッション
-│    ├─ CLAUDE.md ✅  # ユーザスコープのシステムプロンプト
+│    ├─ settings.json ✅  # ユーザスコープの Claude へのパーミッション
+│    ├─ CLAUDE.md ✅  # ユーザスコープの Claude へのシステムプロンプト
 │    ├─ commands/
 │    │    ├─ ask.md ✅  # 変更依頼にレベルを付与するコマンド
 │    │    └─ save.md ✅🧩  # 直前の質問と回答を保存するコマンド
 │    └─ scripts/
 │         ├─ ask.sh ✅  # 変更依頼にレベルを付与するコマンドの処理本体
-│         ├─ pre-bash-hook.sh ✅  # 意図しない Bash コマンドを禁止するためのツール使用前フック
+│         ├─ extract.sh ✅  # Claude との最後の会話をパースしてファイルに書き込むスクリプト
+│         ├─ pre-bash-hook.sh ✅  # 意図しないコマンド利用を禁止するためのツール使用前フック
 │         └─ post-proc.sh ✅  # 回答後フック (作業ディレクトリに post-proc.sh があれば呼び出し)
 │
-├─ workspace/ 💡🟣  # 日常作業ディレクトリ
-│    ├─ post-proc.sh ✅🔒  # その時々の作業内容に応じた資料コンパイル・同期コマンド
-│    ├─ CLAUDE.md ✅🔒  # 日常作業の上で Claude に伝えたい前提知識・ルール
+├─ workspace/ 💡  # 日常作業ディレクトリ
+│    ├─ CLAUDE.md ✅🔒  # 日常作業の上で Claude に伝えたい前提知識・ルールを記入
+│    ├─ pre-bash-hook.sh ✅🔒  # 日常作業の上で Claude に許可するコマンドを記入
+│    ├─ post-proc.sh ✅🔒  # 日常作業の上で Claude 回答後にフックさせたい処理を記入
 │    ├─ ask.md 💡  # メインエージェントへの作業依頼
 │    ├─ .claude/
-│    │    ├─ settings.local.json ✅
+│    │    ├─ settings.local.json ✅  # 日常作業の上での Claude へのパーミッション
+│    │    ├─ skills/
+│    │    │     └─ create-mtg-deck/SKILL.md ✅  # 次回打合せ資料を新規作成するスキル
 │    │    ├─ agents/  # サブエージェント
 │    │    │     └─ zundamon.md ✅🧩
 │    │    └─ agent-memory/  # サブエージェントの記憶
 │    │          └─ zundamon/MEMORY.md
-│    ├─ backyard/ 🐈‍⬛  # 報告資料倉庫
+│    ├─ backyard/ 🟣🐈‍⬛  # 報告資料倉庫 (別プライベートリポジトリ)
 │    │    ├─ Draft/20260101suffix/
 │    │    ├─ Mtg/20260101/  # 打合せ資料
 │    │    └─ *.pdf
-│    ├─ project_0/  # 個別プロジェクト
+│    ├─ project_0/ 🟣  # 個別プロジェクト
 │    │    └─ _report.md  # サブエージェントの作業報告
 │    └─ project_1/  # 個別プロジェクト
 │
-└─ Dropbox/obsidian/Mercury/  🟣
+└─ Dropbox/obsidian/Mercury/ 🟣
      ├─ Claude/ 💡  # Claude 回答保存場所
      └─ References/ 💡  # 参考文献置き場
 ```
@@ -134,11 +138,11 @@ find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -exec rmdir 
 # 暗号化ファイル 🔒 は変更したら再度暗号化します
 chezmoi add --encrypt ~/workspace/CLAUDE.md
 chezmoi add --encrypt ~/workspace/post-proc.sh
-# テンプレートファイル 🧩 はテンプレート側を編集してください
+# テンプレートファイル 🧩 はテンプレート側を編集します
 chezcd
 sakura launcher.html.tmpl
 sakura workspace/dot_claude/agents/zundamon.md.tmpl
-# ローカル側を編集してしまったら改めてテンプレートとして登録しくり抜いてください
+# ローカル側を編集してしまったら改めてテンプレートとして登録した上でくり抜きます
 ```
 
 ### Dotfiles details
