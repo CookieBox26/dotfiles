@@ -11,10 +11,13 @@ html, body {
 }
 body {
   font-size: 15px;
-  line-height: 18px;
-  font-family: 'Ume Gothic', sans-serif;
+  line-height: 17px;
+  font-family: "梅ゴシック", monospace;
   color: #333;
   background: #333;
+}
+textarea {
+  font-family: "梅ゴシック", monospace;
 }
 .container {
   box-sizing: border-box;
@@ -56,8 +59,8 @@ textarea#note {
   resize: none;
   display: block;
   line-height: inherit;
-  font-size: 14px;
-  line-height: 17px;
+  size: 14px;
+  line-height: 16px;
 }
 a {
   display: block;
@@ -70,18 +73,23 @@ a:hover {
   color: #1f77b4;
   text-decoration: underline;
 }
-div.link {
+.link {
   color: #1f77b4;
   cursor: pointer;
 }
-div.link:hover {
+.link:hover {
   color: #1f77b4;
   text-decoration: underline;
+}
+.indent-1 {
+  margin-left: 1em;
+}
+.indent-2 {
+  margin-left: 2em;
 }
 --></style>
 <script type="text/javascript"><!--
 const home = '../{{ .username }}/';
-const workspace = '../{{ .username }}/workspace/';
 function appendSidebar(elm) {
   sidebar.appendChild(elm);
 }
@@ -96,7 +104,7 @@ function createCopyButton() {
   return link;
 }
 function createSwitchButton(text, noteId) {
-  let link = document.createElement('div');
+  let link = document.createElement('span');
   link.classList.add('link');
   link.innerHTML = text;
   link.addEventListener('click', function(event) {
@@ -106,20 +114,20 @@ function createSwitchButton(text, noteId) {
   });
   return link;
 }
-function createHomeLink(text, path) {
-  const link = document.createElement('a');
-  link.setAttribute('href', home + path);
+function createLocalLink(text, path, indent='') {
+  const link = document.createElement('div');
+  link.classList.add('link');
+  if (indent) link.classList.add(indent);
   link.innerHTML = text;
+  link.addEventListener('click', function(event) {
+    navigator.clipboard.writeText('cd ~/' + path);
+    window.open(home + path, '_blank');
+  });
   return link;
 }
-function createWorkspaceLink(text, path) {
+function createLink(text, url, indent='') {
   const link = document.createElement('a');
-  link.setAttribute('href', workspace + path);
-  link.innerHTML = text;
-  return link;
-}
-function createLink(text, url) {
-  const link = document.createElement('a');
+  if (indent) link.classList.add(indent);
   link.setAttribute('href', url);
   link.innerHTML = text;
   return link;
@@ -134,29 +142,40 @@ function createLinkWithClipboard(text, url, clipBoard) {
   });
   return link;
 }
+function createSpan(text) {
+  let span = document.createElement('span');
+  span.innerHTML = text;
+  return span;
+}
 function setupSidebar(sidebar) {
-  appendSidebar(createCopyButton());
   appendSidebar(createSwitchButton('Note 0', 'note'));
-  appendSidebar(createSwitchButton('Note 1', 'note-1'));
+  appendSidebar(createSpan(' | '));
+  appendSidebar(createSwitchButton('1', 'note-1'));
+  appendSidebar(createCopyButton());
   appendSidebar(document.createElement('hr'));
   appendSidebar(createLinkWithClipboard('AWS Sign-in', 'https://signin.aws.amazon.com/signin?client_id=arn%3Aaws%3Asignin%3A%3A%3Aconsole%2Fcanvas&redirect_uri=https%3A%2F%2Fconsole.aws.amazon.com%2Fconsole%2Fhome%3Fca-oauth-flow-id%3D27fc%26hashArgs%3D%2523%26isauthcode%3Dtrue%26nc2%3Dh_si%26src%3Dheader-signin%26state%3DhashArgsFromTB_us-east-2_c002fd7d256faf4f&page=resolve&code_challenge=7uKnomvSJggsVq5BKuhKSetpaik-QQQyzL93evF-vUg&code_challenge_method=SHA-256&backwards_compatible=true', '{{ .email }}'));
   appendSidebar(createLink('AWS Access Portal', '{{ .aws_sso_start_url }}'));
   appendSidebar(document.createElement('hr'));
   appendSidebar(createLink('GitHub', 'https://github.com/CookieBox26'));
-  appendSidebar(createLink('Repositories', 'https://github.com/CookieBox26?tab=repositories'));
-  appendSidebar(createLink(' - dotfiles', 'https://github.com/CookieBox26/dotfiles/blob/main/README.md'));
-  appendSidebar(createLink(' - backyard', 'https://github.com/CookieBox26/backyard/blob/main/README.md'));
-  appendSidebar(createLink(' - nazuna', 'https://github.com/CookieBox26/nazuna/blob/main/README.md'));
-  appendSidebar(createLink(' - zuma', 'https://github.com/CookieBox26/zuma/blob/main/README.md'));
+  appendSidebar(createLink('Repositories', 'https://github.com/CookieBox26?tab=repositories', 'indent-1'));
+  appendSidebar(createLink('dotfiles', 'https://github.com/CookieBox26/dotfiles/blob/main/README.md', 'indent-2'));
+  appendSidebar(createLink('backyard', 'https://github.com/CookieBox26/backyard/blob/main/README.md', 'indent-2'));
+  appendSidebar(createLink('nazuna', 'https://github.com/CookieBox26/nazuna/blob/main/README.md', 'indent-2'));
+  appendSidebar(createLink('cookipedia', 'https://github.com/CookieBox26/cookipedia/blob/main/README.md', 'indent-2'));
+  appendSidebar(createLink('zuma', 'https://github.com/CookieBox26/zuma/blob/main/README.md', 'indent-2'));
   appendSidebar(createLink('Create a new Gist', 'https://gist.github.com/'));
   appendSidebar(document.createElement('hr'));
-  appendSidebar(createHomeLink('chezmoi/README', '.local/share/chezmoi/README.md'));
-  appendSidebar(createWorkspaceLink('workspace/CLAUDE', 'CLAUDE.md'));
-  appendSidebar(createWorkspaceLink('nazuna/README', 'nazuna/README.md'));
-  appendSidebar(createHomeLink('zuma/README', 'zuma/README.md'));
-  appendSidebar(createWorkspaceLink('Cookipedia α-version', 'cookipedia/docs/index.html'));
-  appendSidebar(createWorkspaceLink('カラーパレット', 'cookipedia/docs/utils/color_palette.html'));
-  appendSidebar(createWorkspaceLink('Cookie Box', 'cookie-box/site/index.html'));
+  appendSidebar(createLocalLink('chezmoi/', '.local/share/chezmoi/'));
+  appendSidebar(createLocalLink('workspace/', 'workspace/'));
+  appendSidebar(createLocalLink('CLAUDE', 'workspace/CLAUDE.md', 'indent-1'));
+  appendSidebar(createLocalLink('nazuna/', 'workspace/nazuna/', 'indent-1'));
+  appendSidebar(createLocalLink('square/', 'square/'));
+  appendSidebar(createLocalLink('cookies-site-utils/', 'square/cookies-site-utils/', 'indent-1'));
+  appendSidebar(createLocalLink('zuma/', 'square/zuma/', 'indent-1'));
+  appendSidebar(document.createElement('hr'));
+  appendSidebar(createLocalLink('Cookipedia α-version', 'square/cookipedia/docs/index.html'));
+  appendSidebar(createLocalLink('カラーパレット', 'square/cookipedia/docs/utils/color_palette.html', 'indent-1'));
+  // appendSidebar(createLocalLink('Cookie Box', 'square/cookie-box/site/index.html'));
   appendSidebar(document.createElement('hr'));
   appendSidebar(createLink('Slack', 'https://app.slack.com/client/{{ .slack }}'));
   appendSidebar(createLink('Yahoo!メール', 'https://mail.yahoo.co.jp/u/pc/f/'));
@@ -169,6 +188,8 @@ function setupSidebar(sidebar) {
   appendSidebar(createLink('Simplenote', 'https://app.simplenote.com/login/'));
   appendSidebar(document.createElement('hr'));
   appendSidebar(createLink('Obsidian (Mercury)', 'obsidian://open?vault=Mercury'));
+  appendSidebar(createLink('Obsidian (backyard)', 'obsidian://open?vault=backyard'));
+  appendSidebar(createLink('Obsidian (nazuna)', 'obsidian://open?vault=nazuna'));
 }
 function setupNote() {
   const note = document.getElementById('note');
