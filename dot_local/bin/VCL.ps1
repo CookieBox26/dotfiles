@@ -26,7 +26,7 @@ if ($JsonPath -and (Test-Path $JsonPath)) {
         # JSON を読み込めない場合は無視
     }
 }
-$exitPhrase = "音声認識を終了"
+$exitPhrase = "終了"
 $commands[$exitPhrase] = "__EXIT__"
 
 # ============================================================
@@ -91,6 +91,8 @@ try {
         Write-Host ("[$timestamp] 認識: '$text' (信頼度:$confR)") -ForegroundColor White
         $cmd = $commands[$text]
         if ($cmd -eq "__EXIT__") {
+            $cmd = "bash -c 'source ~/.local/bin/sound.sh ""`$@""' _ marisa 終了するぜ"
+            Invoke-Expression $cmd
             Write-Host "音声認識を終了します。" -ForegroundColor Green
             break
         }
