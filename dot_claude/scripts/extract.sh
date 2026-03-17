@@ -10,7 +10,8 @@ set -euo pipefail
 mode="${1:-1}" 
 
 # Claude Code からの標準入力から会話履歴パスを取得
-jsonl_file="$(pwd)/jsonl_path.txt"
+mkdir -p "$(pwd)/.claude"
+jsonl_file="$(pwd)/.claude/jsonl_path.txt"
 read -t 0 && input_json="$(cat)" || input_json=""  # 標準入力にデータがあれば読む
 # echo "$input_json" > "$(pwd)/debug.txt"  # 飛んできた標準入力を確認したい場合
 if [ -n "$input_json" ] && echo "$input_json" | jq empty >/dev/null 2>&1; then

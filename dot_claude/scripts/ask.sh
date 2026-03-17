@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 input_file="$(pwd)/ask.md" # インプットファイル
+[ -f "$input_file" ] || input_file="$(pwd)/_ask.md"
 if [ ! -f "$input_file" ] || [ ! -s "$input_file" ]; then
   # インプットファイルがないか空なら以下のメッセージで終わる
   printf '\n%s' "今は依頼はないです。"

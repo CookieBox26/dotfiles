@@ -14,6 +14,11 @@ fi
 script="$(pwd)/pre-bash-hook.sh"
 if [ -f "$script" ]; then
   bash "$script" "$command"
-else
-  exit 2
+  exit $?
 fi
+script="$(pwd)/.claude/pre-bash-hook.sh"
+if [ -f "$script" ]; then
+  bash "$script" "$command"
+  exit $?
+fi
+exit 2
