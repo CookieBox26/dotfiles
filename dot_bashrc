@@ -12,3 +12,7 @@ alias chezdiff='chezmoi diff | grep "^diff " | awk "{print \$3}"'
 alias chezconf='sakura ~/.config/chezmoi/chezmoi.toml'
 
 alias vcl='powershell -ExecutionPolicy Bypass -File "$(cygpath -w ~/.local/bin/VCL.ps1)"'
+
+export REFPATH=~/Dropbox/obsidian/Mercury/References
+alias refcd="cd $REFPATH"
+alias csu-a-cp="csu -a -c $REFPATH/_cookipedia.toml"
