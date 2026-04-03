@@ -3,7 +3,8 @@
     "allow": [
       "Write(./**)",
       "Edit(./**)",
-      "Bash(pytest:*)"
+      "Bash(uv run ruff check:*)",
+      "Bash(uv run pytest:*)"
     ],
     "deny": [
       "Read(./ask.md)"
