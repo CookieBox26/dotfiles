@@ -10,7 +10,8 @@
       "Read(./ask.md)"
     ],
     "additionalDirectories": [
-      "../Dropbox/obsidian/Mercury/References/"
+      "../Dropbox/obsidian/Mercury/References/",
+      "../square/cookipedia/docs/"
     ]
   }
 }
