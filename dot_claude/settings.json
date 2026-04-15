@@ -43,6 +43,7 @@
       "WebSearch"
     ],
     "deny": [
+      "Read(.env)",
       "Bash(rm:*)",
       "Bash(curl:*)",
       "Bash(python:*)",
