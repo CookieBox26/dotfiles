@@ -1,5 +1,4 @@
 {
-  "defaultMode": "dontAsk",
   "permissions": {
     "allow": [
       "Skill(ask)",
@@ -84,5 +83,6 @@
         ]
       }
     ]
-  }
+  },
+  "defaultMode": "dontAsk"
 }
