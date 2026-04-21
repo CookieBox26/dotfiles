@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title></title>
 <style type="text/css"><!--
+:root {
+  --accent-color: #de0c62;
+}
 html, body {
   margin: 0;
   height: 100%;
@@ -37,7 +40,7 @@ div#main {
   gap: 2px;
 }
 div#left {
-  width: 200px;
+  width: 225px;
   height: 100%;
   flex-flow: column;
 }
@@ -66,19 +69,19 @@ a {
   display: block;
 }
 a, a:visited {
-  color: #1f77b4;
+  color: var(--accent-color);
   text-decoration: none;
 }
 a:hover {
-  color: #1f77b4;
+  color: var(--accent-color);
   text-decoration: underline;
 }
 .link {
-  color: #1f77b4;
+  color: var(--accent-color);
   cursor: pointer;
 }
 .link:hover {
-  color: #1f77b4;
+  color: var(--accent-color);
   text-decoration: underline;
 }
 .indent-1 {
@@ -86,6 +89,17 @@ a:hover {
 }
 .indent-2 {
   margin-left: 2em;
+}
+span.cd {
+  font-size: small;
+  margin-left: 0.5em;
+  padding: 0 0.15em;
+  background-color: var(--accent-color);
+  color: white;
+  cursor: pointer;
+}
+span.cd::before {
+  content: 'cd';
 }
 --></style>
 <script type="text/javascript"><!--
@@ -115,15 +129,22 @@ function createSwitchButton(text, noteId) {
   return link;
 }
 function createLocalLink(text, path, indent='') {
-  const link = document.createElement('div');
-  link.classList.add('link');
+  const container = document.createElement('div');
+  const link = document.createElement('a');
+  link.style.display = 'inline';
   if (indent) link.classList.add(indent);
+  link.setAttribute('href', home + path);
   link.innerHTML = text;
-  link.addEventListener('click', function(event) {
-    navigator.clipboard.writeText('cd ~/' + path);
-    window.open(home + path, '_blank');
-  });
-  return link;
+  container.appendChild(link);
+  if (path.endsWith('/')) {
+    const span = document.createElement('span');
+    span.classList.add('cd');
+    span.addEventListener('click', function(event) {
+      navigator.clipboard.writeText('cd ~/' + path);
+    });
+    container.appendChild(span);
+  }
+  return container;
 }
 function createLink(text, url, indent='') {
   const link = document.createElement('a');
@@ -168,8 +189,8 @@ function setupSidebar(sidebar) {
   appendSidebar(document.createElement('hr'));
   appendSidebar(createLocalLink('chezmoi/', '.local/share/chezmoi/'));
   appendSidebar(createLocalLink('workspace/', 'workspace/'));
-  appendSidebar(createLocalLink('CLAUDE', 'workspace/CLAUDE.md', 'indent-1'));
-  appendSidebar(createLocalLink('backyard/', 'workspace/backyard/', 'indent-1'));
+  appendSidebar(createLocalLink('CLAUDE.md', 'workspace/CLAUDE.md', 'indent-1'));
+  // appendSidebar(createLocalLink('backyard/', 'workspace/backyard/', 'indent-1'));
   appendSidebar(createLocalLink('nazuna/', 'workspace/nazuna/', 'indent-1'));
   appendSidebar(createLocalLink('square/', 'square/'));
   appendSidebar(createLocalLink('cookies-site-utils/', 'square/cookies-site-utils/', 'indent-1'));
@@ -179,6 +200,7 @@ function setupSidebar(sidebar) {
   appendSidebar(createLocalLink('Cookipedia α-version', 'square/cookipedia/docs/index.html'));
   appendSidebar(createLocalLink('カラーパレット', 'square/cookipedia/docs/utils/color_palette.html', 'indent-1'));
   // appendSidebar(createLocalLink('Cookie Box', 'square/cookie-box/site/index.html'));
+  appendSidebar(createLink('http://127.0.0.1:8000/', 'http://127.0.0.1:8000/'));
   appendSidebar(document.createElement('hr'));
   appendSidebar(createLink('Slack', 'https://app.slack.com/client/{{ .slack }}'));
   appendSidebar(createLink('Yahoo!メール', 'https://mail.yahoo.co.jp/u/pc/f/'));
