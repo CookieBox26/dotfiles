@@ -16,3 +16,23 @@ alias vcl='powershell -ExecutionPolicy Bypass -File "$(cygpath -w ~/.local/bin/V
 export REFPATH=~/Dropbox/obsidian/Mercury/References
 alias refcd="cd $REFPATH"
 alias csu-a-cp="csu -a -c $REFPATH/_cookipedia.toml"
+
+claude_allowed_dirs=(
+  "${HOME}/workspace"
+  "${HOME}/Dropbox/obsidian/Mercury/References"
+  "${HOME}/square/taiyaki"
+)
+claude() {
+  local current_dir
+  current_dir=$(pwd)
+  for dir in "${claude_allowed_dirs[@]}"; do
+    if [ "$current_dir" = "$dir" ]; then
+      command claude "$@"
+      return
+    fi
+  done
+  echo 'このディレクトリでは claude の実行が想定されていません'
+  read -p '続行しますか？ (y/n): ' ans
+  [ "$ans" = 'y' ] || { echo '中止します'; return; }
+  command claude "$@"
+}
