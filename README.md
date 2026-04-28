@@ -108,28 +108,7 @@ find ~/.local/share/chezmoi -path '*/.git' -prune -o -type d -empty -exec rmdir 
 │         ├─ extract.sh ✅  # Claude との最後の会話をパースしてファイルに書き込むスクリプト
 │         ├─ pre-bash-hook.sh ✅  # 意図しないコマンド利用を禁止するためのツール使用前フック
 │         └─ post-proc.sh ✅  # 回答後フック (作業ディレクトリに post-proc.sh があれば呼び出し)
-│
 ├─ workspace/ 💡  # 日常作業ディレクトリ
-│    ├─ CLAUDE.md ✅🔒  # 日常作業の上で Claude に伝えたい前提知識・ルールを記入
-│    ├─ pre-bash-hook.sh ✅🔒  # 日常作業の上で Claude に許可するコマンドを記入
-│    ├─ post-proc.sh ✅🔒  # 日常作業の上で Claude 回答後にフックさせたい処理を記入
-│    ├─ ask.md 💡  # メインエージェントへの作業依頼
-│    ├─ .claude/
-│    │    ├─ settings.local.json ✅  # 日常作業の上での Claude へのパーミッション
-│    │    ├─ skills/
-│    │    │     └─ create-mtg-deck/SKILL.md ✅  # 次回打合せ資料を新規作成するスキル
-│    │    ├─ agents/  # サブエージェント
-│    │    │     └─ zundamon.md ✅🧩
-│    │    └─ agent-memory/  # サブエージェントの記憶
-│    │          └─ zundamon/MEMORY.md
-│    ├─ backyard/ 🟣🐈‍⬛  # 報告資料倉庫 (別プライベートリポジトリ)
-│    │    ├─ Draft/20260101suffix/
-│    │    ├─ Mtg/20260101/  # 打合せ資料
-│    │    └─ *.pdf
-│    ├─ project_0/ 🟣  # 個別プロジェクト
-│    │    └─ _report.md  # サブエージェントの作業報告
-│    └─ project_1/  # 個別プロジェクト
-│
 └─ Dropbox/obsidian/Mercury/ 🟣
      ├─ Claude/ 💡  # Claude 回答保存場所
      └─ References/ 💡  # 参考文献置き場
