@@ -26,13 +26,10 @@ claude() {
   local current_dir
   current_dir=$(pwd)
   for dir in "${claude_allowed_dirs[@]}"; do
-    if [ "$current_dir" = "$dir" ]; then
-      command claude "$@"
-      return
-    fi
+    [ "$current_dir" = "$dir" ] && { command claude "$@"; return; }
   done
   echo 'このディレクトリでは claude の実行が想定されていません'
-  read -p '続行しますか？ (y/n): ' ans
+  read -p '本当に続行しますか？ (y/n): ' ans
   [ "$ans" = 'y' ] || { echo '中止します'; return; }
   command claude "$@"
 }
