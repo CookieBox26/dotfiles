@@ -8,10 +8,10 @@
 :root {
   --border-color: #666;
   --link-color: #019386;
-  --surface-color: color-mix(in srgb, var(--link-color) 25%, white);
+  --surface-color: color-mix(in srgb, var(--link-color) 21%, white);
   --btn-color: color-mix(in srgb, var(--link-color) 90%, white);
   --btn-text-color: var(--surface-color);
-  --track-color: color-mix(in srgb, var(--link-color) 40%, white);
+  --track-color: color-mix(in srgb, var(--link-color) 36%, white);
   --thumb-color: color-mix(in srgb, var(--link-color) 60%, white);
   --textarea-text-color: #444;
   --textarea-surface-color: #fff;
@@ -209,13 +209,12 @@ function setupSidebar0(appendSidebar) {
 }
 function setupSidebar1(appendSidebar) {
   appendSidebar(createLink('Obsidian (Mercury)', 'obsidian://open?vault=Mercury'));
-  appendSidebar(createLink('Obsidian (shelf)', 'obsidian://open?vault=shelf'));
-  appendSidebar(createLink('Obsidian (nazuna)', 'obsidian://open?vault=nazuna'));
+  appendSidebar(createLink('Obsidian (workspace)', 'obsidian://open?vault=workspace'));
   appendSidebar(document.createElement('hr'));
-  appendSidebar(createLocalLink('Cookipedia α-version', 'square/cookipedia/docs/index.html'));
-  appendSidebar(createLocalLink('カラーパレット', 'square/cookipedia/docs/utils/color_palette.html', 'indent-1'));
-  appendSidebar(createLocalLink('Cookie Box', 'square/cookie-box/site/index.html'));
-  appendSidebar(createLocalLink('Cookiepad', 'square/cookie-box/site/cookiepad/index.html', 'indent-1'));
+  appendSidebar(createLocalLink('Cookipedia α-version', 'workspace/cookipedia/docs/index.html'));
+  appendSidebar(createLocalLink('カラーパレット', 'workspace/cookipedia/docs/utils/color_palette.html', 'indent-1'));
+  appendSidebar(createLocalLink('Cookie Box', 'workspace/cookie-box/site/index.html'));
+  appendSidebar(createLocalLink('Cookiepad', 'workspace/cookie-box/site/cookiepad/index.html', 'indent-1'));
   appendSidebar(createLink('http://127.0.0.1:8000/', 'http://127.0.0.1:8000/'));
   appendSidebar(document.createElement('hr'));
   appendSidebar(createLocalLink('chezmoi/', '.local/share/chezmoi/'));
@@ -223,9 +222,10 @@ function setupSidebar1(appendSidebar) {
   appendSidebar(createLocalLink('CLAUDE.md', 'workspace/CLAUDE.md', 'indent-1'));
   appendSidebar(createLocalLink('shelf/', 'workspace/shelf/', 'indent-1'));
   appendSidebar(createLocalLink('nazuna/', 'workspace/nazuna/', 'indent-1'));
+  appendSidebar(createLocalLink('cookipedia/', 'workspace/cookipedia/', 'indent-1'));
+  appendSidebar(createLocalLink('cookie-box/', 'workspace/cookie-box/', 'indent-1'));
   appendSidebar(createLocalLink('square/', 'square/'));
   appendSidebar(createLocalLink('cookies-site-utils/', 'square/cookies-site-utils/', 'indent-1'));
-  appendSidebar(createLocalLink('cookipedia/', 'square/cookipedia/', 'indent-1'));
   appendSidebar(createLocalLink('zuma/', 'square/zuma/', 'indent-1'));
 }
 function setupNote() {
