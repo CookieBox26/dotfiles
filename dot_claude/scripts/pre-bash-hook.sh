@@ -3,7 +3,13 @@ set -euo pipefail
 json=$(cat)
 command=$(printf '%s' "$json" | jq -r '.tool_input.command // ""')
 
-pattern="^(uv run )?pytest$"
+pattern="^pwd$"
+[[ "$command" =~ $pattern ]] && exit 0
+
+pattern="^(uv run )?pytest"
+[[ "$command" =~ $pattern ]] && exit 0
+
+pattern="^(uv run )?ruff check"
 [[ "$command" =~ $pattern ]] && exit 0
 
 pattern="^bash -c 'source ~/\.claude/scripts/ask\.sh'"

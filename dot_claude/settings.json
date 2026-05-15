@@ -3,6 +3,7 @@
     "allow": [
       "Skill(ask)",
       "Bash(bash -c :*)",
+      "Bash(pwd)",
       "WebFetch(domain:aaai.org)",
       "WebFetch(domain:aideadlines.org)",
       "WebFetch(domain:ar5iv.labs.arxiv.org)",
