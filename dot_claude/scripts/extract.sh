@@ -30,6 +30,14 @@ fi
 [ -n "$jsonl_path" ] && [ "$jsonl_path" != "null" ] || { echo "JSONL not found" >&2; exit 1; }
 [ "$mode" = "0" ] && exit 0  # モード 0 ならここで終わる
 
+# 1行目が agent-setting なら agentSetting を抜き出す
+agent_suffix=""
+first_line="$(head -n1 "$jsonl_path")"
+if echo "$first_line" | jq -e 'select(.type == "agent-setting")' >/dev/null 2>&1; then
+  agent_name="$(echo "$first_line" | jq -r '.agentSetting')"
+  [ -n "$agent_name" ] && [ "$agent_name" != "null" ] && agent_suffix="_${agent_name}"
+fi
+
 # 会話履歴 JSONL から最後のユーザメッセージ、アシスタントの思考、アシスタントのメッセージを一括抽出
 now_display="$(date '+%Y-%m-%d %H:%M:%S')"
 now_file="$(date '+%Y%m%d')"
@@ -61,6 +69,6 @@ body="$(jq -rs '
 ' < "$jsonl_path")"
 
 # マークダウンファイル出力 (作業ディレクトリと同名のサブディレクトリを切って配置)
-target="$HOME/Dropbox/obsidian/Mercury/Claude/${PWD##*/}"
+target="$HOME/Dropbox/obsidian/Mercury/Claude/${PWD##*/}${agent_suffix}"
 mkdir -p "$target"
 printf '# %s\n\n%s\n' "$now_display" "$body" >> "${target}/${now_file}.md"
