@@ -2,8 +2,8 @@
   "permissions": {
     "allow": [
       "Skill(ask)",
-      "Bash(bash -c :*)",
       "Bash(pwd)",
+      "Bash(ls)",
       "WebFetch(domain:aaai.org)",
       "WebFetch(domain:aideadlines.org)",
       "WebFetch(domain:ar5iv.labs.arxiv.org)",
@@ -44,10 +44,12 @@
     ],
     "deny": [
       "Read(.env)",
+      "Read(.git/**)",
       "Bash(rm:*)",
       "Bash(curl:*)",
       "Bash(python:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(gh:*)"
     ]
   },
   "hooks": {
@@ -85,5 +87,6 @@
       }
     ]
   },
-  "defaultMode": "dontAsk"
+  "defaultMode": "dontAsk",
+  "includeGitInstructions": false
 }

@@ -3,19 +3,24 @@ set -euo pipefail
 json=$(cat)
 command=$(printf '%s' "$json" | jq -r '.tool_input.command // ""')
 
-pattern="^pwd$"
+pattern='^ls([[:space:]].*)?$'
 [[ "$command" =~ $pattern ]] && exit 0
 
-pattern="^(uv run )?pytest"
+pattern='^pwd$'
 [[ "$command" =~ $pattern ]] && exit 0
 
-pattern="^(uv run )?ruff check"
+pattern='^(uv run )?pytest'
 [[ "$command" =~ $pattern ]] && exit 0
 
-pattern="^bash -c 'source ~/\.claude/scripts/ask\.sh'"
+pattern='^(uv run )?ruff check'
 [[ "$command" =~ $pattern ]] && exit 0
 
-pattern="^bash -c 'source ~/\.claude/scripts/post-proc\.sh'$"
+cs='source ~/\.claude/scripts/ask\.sh'
+pattern="^bash -c '${cs}'"
+[[ "$command" =~ $pattern ]] && exit 0
+
+cs='source ~/\.claude/scripts/post-proc\.sh'
+pattern="^bash -c '${cs}'"'$'
 [[ "$command" =~ $pattern ]] && exit 0
 
 script="$(pwd)/pre-bash-hook.sh"
