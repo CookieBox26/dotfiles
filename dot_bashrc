@@ -24,11 +24,13 @@ _claude_run() {
   [ "$hid" = 1 ] && ( sleep 10; mv .abc .git ) &
   command claude "$@"
 }
+
 claude_allowed_dirs=(
   "${HOME}/workspace"
   "${HOME}/Dropbox/obsidian/Mercury/References"
   "${HOME}/square/taiyaki"
 )
+
 claude() {
   local current_dir
   current_dir=$(pwd)
@@ -39,4 +41,20 @@ claude() {
   read -p '本当に続行しますか？ (y/n): ' ans
   [ "$ans" = 'y' ] || { echo '中止します'; return; }
   _claude_run "$@"
+}
+
+_ssha() {
+  local ssh_key="$1"
+  local fp="$(ssh-keygen -lf "$ssh_key" | awk '{print $2}')"
+  if ssh-add -l 2>/dev/null | grep -q "$fp"; then
+    echo "鍵は既に追加されています"
+    return
+  fi
+  echo "鍵を追加します"
+  eval "$(ssh-agent -s)"
+  ssh-add "$ssh_key"
+}
+
+ssha() {
+  _ssha "${HOME}/.ssh/id_ed25519"
 }
