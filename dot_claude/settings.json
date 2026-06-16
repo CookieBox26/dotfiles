@@ -1,4 +1,5 @@
 {
+  "includeGitInstructions": false,
   "permissions": {
     "allow": [
       "Skill(ask)",
@@ -88,5 +89,6 @@
     ]
   },
   "defaultMode": "dontAsk",
-  "includeGitInstructions": false
+  "agentPushNotifEnabled": true,
+  "inputNeededNotifEnabled": true
 }
