@@ -58,3 +58,12 @@ _ssha() {
 ssha() {
   _ssha "${HOME}/.ssh/id_ed25519"
 }
+
+git() {
+  case "${1-}" in
+    pull|push)
+      ssha
+      ;;
+  esac
+  command git "$@"
+}
