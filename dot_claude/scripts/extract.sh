@@ -40,7 +40,11 @@ fi
 
 # 会話履歴 JSONL から最後のユーザメッセージ、アシスタントの思考、アシスタントのメッセージを一括抽出
 now_display="$(date '+%Y-%m-%d %H:%M:%S')"
-now_file="$(date '+%Y%m%d')"
+
+# GNU date 拡張 (-d, %u) 前提。macOS 標準の BSD date では動作しない (Git Bash / Linux のみ想定)
+dow="$(date '+%u')"  # ISO 曜日番号: 月=1 ... 日=7
+now_file="$(date -d "-$((dow-1)) days" '+%Y%m%d')"  # その週の月曜日の日付
+
 body="$(jq -rs '
   [.[] | select(.message != null)] | . as $all |
 
