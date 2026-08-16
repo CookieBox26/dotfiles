@@ -53,6 +53,7 @@
       "Bash(gh:*)"
     ]
   },
+  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
@@ -88,7 +89,8 @@
       }
     ]
   },
-  "defaultMode": "dontAsk",
+  "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "inputNeededNotifEnabled": true
+  "defaultMode": "dontAsk",
+  "promptSuggestionEnabled": false
 }
