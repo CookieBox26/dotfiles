@@ -72,7 +72,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -Command \"(New-Object Media.SoundPlayer 'C:\\Windows\\Media\\Ring01.wav').PlaySync()\""
+            "command": "powershell.exe -Command \"(New-Object Media.SoundPlayer 'C:\\Windows\\Media\\Ring07.wav').PlaySync()\""
           }
         ]
       }
@@ -92,5 +92,6 @@
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "defaultMode": "dontAsk",
-  "promptSuggestionEnabled": false
+  "promptSuggestionEnabled": false,
+  "disableAutoMode": "disable"
 }
