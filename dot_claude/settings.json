@@ -53,7 +53,7 @@
       "Bash(gh:*)"
     ]
   },
-  "model": "sonnet",
+  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
@@ -91,6 +91,7 @@
   },
   "promptSuggestionEnabled": false,
   "disableAutoMode": "disable",
+  "remoteControlAtStartup": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "defaultMode": "dontAsk"
