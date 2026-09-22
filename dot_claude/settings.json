@@ -113,5 +113,6 @@
   "remoteControlAtStartup": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "defaultMode": "dontAsk"
+  "defaultMode": "dontAsk",
+  "feedbackDrafts": "off"
 }
