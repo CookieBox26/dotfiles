@@ -13,6 +13,8 @@ alias chezconf='sakura ~/.config/chezmoi/chezmoi.toml'
 
 alias vcl='powershell -ExecutionPolicy Bypass -File "$(cygpath -w ~/.local/bin/VCL.ps1)"'
 
+alias ws='bash ws.sh'
+
 export REFPATH=~/Dropbox/obsidian/Mercury/References
 alias refcd="cd $REFPATH"
 
