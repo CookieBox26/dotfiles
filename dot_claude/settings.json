@@ -1,5 +1,6 @@
 {
   "includeGitInstructions": false,
+  "autoMemoryEnabled": false,
   "permissions": {
     "allow": [
       "Skill(ask)",
@@ -69,7 +70,10 @@
       "Bash(curl:*)",
       "Bash(python:*)",
       "Bash(git:*)",
-      "Bash(gh:*)"
+      "Bash(gh:*)",
+      "Read(~/.claude/projects/**)",
+      "Edit(~/.claude/projects/**)",
+      "Write(~/.claude/projects/**)"
     ]
   },
   "model": "opus",
