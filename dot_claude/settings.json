@@ -72,8 +72,7 @@
       "Bash(git:*)",
       "Bash(gh:*)",
       "Read(~/.claude/projects/**)",
-      "Edit(~/.claude/projects/**)",
-      "Write(~/.claude/projects/**)"
+      "Edit(~/.claude/projects/**)"
     ]
   },
   "model": "opus",
