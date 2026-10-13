@@ -17,9 +17,7 @@ class Task(ABC):
     - [必須] task() にスケジュール実行するタスクを実装してください。
     - [必須] schedule() にスケジュールを指定してください。必要なら終了時刻も設定できます。
       https://schedule.readthedocs.io/en/stable/examples.html#run-a-job-until-a-certain-time
-    - [オプショナル] クラス変数 task_name にタスク名を設定してください (標準出力用)。
     """
-    task_name = 'タスク'
 
     @abstractmethod
     def task(self) -> None:
@@ -38,11 +36,12 @@ class Task(ABC):
         """
         pass
 
-    def __init__(self, max_count: int = 0, lateness_limit: int = 0):
+    def __init__(self, task_name: str = 'タスク', max_count: int = 0, lateness_limit: int = 0):
         """
         - max_count : 正数を指定すると、この回数だけ定期実行したら終わります。
         - lateness_limit : 正数を指定すると、起動が遅刻してもその秒数以内なら実行します。
         """
+        self.task_name = task_name  # 標準出力用
         self.max_count = max_count
         self.lateness_limit = lateness_limit
         self.scheduler = schedule.Scheduler()  # この定期実行タスクを実行するスケジューラさん
@@ -53,6 +52,8 @@ class Task(ABC):
         """
         もし「この時間帯は/この日は/この曜日はタスクを実行したくない」というとき、
         ダウンタイムとしたい時間帯に True を返すようオーバーライドしてください。
+        ダウンタイム中であっても schedule ライブラリは通常通り Task.run を呼びますが、
+        「ダウンタイム中」とプリントするだけで task() に進まずに終わり、count も増えません。
         """
         return False
 
@@ -73,7 +74,7 @@ class Task(ABC):
         return self.downtime(dt)
 
     def _print(self, *args):
-        print('[Task]', f'[{type(self).task_name}]', *args)
+        print('[Task]', f'[{self.task_name}]', *args)
 
     def _print_next_run(self, next_run):
         if self.finish_flag:
@@ -96,8 +97,6 @@ class Task(ABC):
             self._print(f'実行({self.count:4d}回目):', now.strftime('%Y-%m-%d %H:%M:%S'), msg)
             self.task()
             self.update_finish_flag()
-        if self.delta is not None:
-            self._print_next_run(now + self.delta)
 
     def _set_delta(self):
         # このタスクの実行スケジュールの周期のタイムデルタをセットします
@@ -127,15 +126,10 @@ class Task(ABC):
             self._print(f'[WARNING] ジョブ未登録なので次回の実行予定を取得できません')
             return
         # 遅刻が許容されている場合、許容秒数内ならタスクを実行します
-        lateness_flag = False
         if self.lateness_limit > 0:
             lateness = self._get_lateness()
             if 0 <= lateness < self.lateness_limit:
                 self.run(f'({lateness} 秒遅刻)')
-                lateness_flag = True
-        # 遅刻実行しなかった場合は次回の実行予定だけ表示します
-        if not lateness_flag:
-            self._print_next_run(self.job.next_run)
 
     def register(self):
         # スケジューラさんにジョブ (実行スケジュールと実行内容) を登録します
@@ -161,24 +155,47 @@ class TaskContainer:
 
     def downtime(self, now: datetime.datetime):
         """
-        downtime は、もし「この時間帯は/この日は/この曜日はタスクを実行したくない」というとき、
-        ダウンタイムとしたい時間帯に True を返すようモンキーパッチしてください。
+        もし「この時間帯は/この日は/この曜日はタスクを実行したくない」というとき、
+        ダウンタイムとしたい時間帯に True を返すよう上書きしてください。
         ダウンタイムは個別のタスクごとに設定することもできます。
         """
         return False
 
-    def all_finished(self):
-        return all([task.finish_flag for task in self.tasks])
+    def on_iter(self):
+        """
+        ループの最初に必ずやる処理があれば上書きしてください。
+        例えばダウンタイムを書いたモジュールを動的リロードして上書きしてください。
+        """
+        pass
+
+    def _print_next_run(self):
+        # 終了していないタスクのうち次回の実行予定が近い順に最大 3 件をプリントします
+        tasks = [
+            task for task in self.tasks
+            if not task.finish_flag and task.scheduler.next_run is not None
+        ]
+        for task in sorted(tasks, key=lambda task: task.scheduler.next_run)[:3]:
+            task._print_next_run(task.scheduler.next_run)
 
     def run(self):
         print('[TaskContainer] スケジュール実行を開始します')
         for task in self.tasks:
             task.container = self
             task.register()
+        for task in sorted(self.tasks, key=lambda task: task.job.next_run):
+            if task.count == 0:
+                task._print_next_run(task.job.next_run)
         while True:
+            self.on_iter()
+            executed = False  # このループで少なくとも一つのタスクが実行されたか
             for task in self.tasks:
+                count_before = task.count
                 task.scheduler.run_pending()
-            if self.all_finished():
+                if task.count > count_before:
+                    executed = True
+            if executed:
+                self._print_next_run()
+            if all([task.finish_flag for task in self.tasks]):
                 break
             time.sleep(self.period)
         print('[TaskContainer] すべてのスケジュール実行タスクが終了しました')
